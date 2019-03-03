@@ -1,306 +1,243 @@
 <template>
     <div>
         <div>
-            <el-dialog title="案件详情"
-                       :visible.sync="dialogVisible"
-                       width="90%"
-                       :before-close="handleClose">
-                <div>
-                    <div>
-                        <div style="text-align: left">
-                            报案类型
-                            <hr>
-                            <el-form :model="form1" :inline="true">
-                                <el-form-item label="案发时间:" style="width: 20%">{{form2.spare1}}</el-form-item>
-                                <el-form-item label="报案类型:" style="width: 20%">{{form1.casetype}}</el-form-item>
-                                <el-form-item label="案件录入人:" style="width: 20%">{{form1.spare2}}</el-form-item>
-                            </el-form>
-                        </div>
-                        <div style="text-align: left">
-                            报案人信息
-                            <hr>
-                            <el-form :model="form2" :inline="true">
-                                <el-form-item label="姓名:" style="width: 10%">{{form2.name}}</el-form-item>
-                                <el-form-item label="性别:" style="width: 10%">{{form2.gender}}</el-form-item>
-                                <el-form-item label="年龄:" style="width: 10%">{{form2.age}}</el-form-item>
-                                <el-form-item label="民族:" style="width: 10%">{{form2.nation}}</el-form-item>
-                                <el-form-item label="职业或身份:" style="width: 15%">{{form2.occupation}}</el-form-item>
-                                <el-form-item label="证件类型:" style="width: 10%">{{form2.cardtype}}</el-form-item>
-                                <el-form-item label="证件号:" style="width: 20%">{{form2.cardid}}</el-form-item>
-                                <el-form-item label="文化程度:" style="width: 10%">{{form2.education}}</el-form-item>
-                                <el-form-item label="年级:" style="width: 10%">{{form2.grade}}</el-form-item>
-                                <el-form-item label="学院或单位:" style="width: 15%">{{form2.reportunit}}</el-form-item>
-                                <el-form-item label="住址:" style="width: 15%">{{form2.address}}</el-form-item>
-                                <el-form-item label="联系方式:" style="width: 15%">{{form2.contact}}</el-form-item>
-                                <el-form-item label="照片:" style="width: 10%">
-                                    <img :src="img1" alt="没有照片" style="width: 100px;height: 100px">
-                                </el-form-item>
-                            </el-form>
-                        </div>
-                        <div style="text-align: left" v-if="update1">
-                            受害人信息
-                            <hr>
-                            <el-form :model="form3" :inline="true">
-                                <el-form-item label="姓名:" style="width: 10%">{{form3.name}}</el-form-item>
-                                <el-form-item label="性别:" style="width: 10%">{{form3.gender}}</el-form-item>
-                                <el-form-item label="年龄:" style="width: 10%">{{form3.age}}</el-form-item>
-                                <el-form-item label="民族:" style="width: 10%">{{form3.nation}}</el-form-item>
-                                <el-form-item label="职业或身份:" style="width: 15%">{{form3.occupation}}</el-form-item>
-                                <el-form-item label="证件类型:" style="width: 10%">{{form3.cardtype}}</el-form-item>
-                                <el-form-item label="证件号:" style="width: 20%">{{form3.cardid}}</el-form-item>
-                                <el-form-item label="文化程度:" style="width: 10%">{{form3.education}}</el-form-item>
-                                <el-form-item label="年级:" style="width: 10%">{{form3.grade}}</el-form-item>
-                                <el-form-item label="学院或单位:" style="width: 15%">{{form3.reportunit}}</el-form-item>
-                                <el-form-item label="住址:" style="width: 15%">{{form3.address}}</el-form-item>
-                                <el-form-item label="联系方式:" style="width: 15%">{{form3.contact}}</el-form-item>
-                                <el-form-item label="照片:" style="width: 10%">
-                                    <img :src="img2" alt="没有照片" style="width: 100px;height: 100px">
-                                </el-form-item>
-                            </el-form>
-                        </div>
-                        <div style="text-align: left">
-                            案发情况
-                            <hr>
-                            <el-form :model="form4" :inline="true">
-                                <el-form-item label="案发地点:" style="width: 30%">{{form4.caseaddress}}</el-form-item>
-                                <el-form-item label="案发时间段:" style="width: 50%">{{form2.peroid}}</el-form-item>
-                                <el-form-item label="案情:" style="width: 100%">{{form4.casedescription}}</el-form-item>
-                            </el-form>
-                        </div>
-                        <div style="text-align: left" v-if="update2">
-                            嫌疑人信息
-                            <hr>
-                            <el-form :model="form5" :inline="true">
-                                <el-form-item label="姓名:" style="width: 10%">{{form5.name}}</el-form-item>
-                                <el-form-item label="性别:" style="width: 10%">{{form5.gender}}</el-form-item>
-                                <el-form-item label="年龄:" style="width: 10%">{{form5.age}}</el-form-item>
-                                <el-form-item label="民族:" style="width: 10%">{{form5.nation}}</el-form-item>
-                                <el-form-item label="职业或身份:" style="width: 15%">{{form5.occupation}}</el-form-item>
-                                <el-form-item label="证件类型:" style="width: 10%">{{form5.cardtype}}</el-form-item>
-                                <el-form-item label="证件号:" style="width: 20%">{{form5.cardid}}</el-form-item>
-                                <el-form-item label="文化程度:" style="width: 10%">{{form5.education}}</el-form-item>
-                                <el-form-item label="年级:" style="width: 10%">{{form5.grade}}</el-form-item>
-                                <el-form-item label="学院或单位:" style="width: 15%">{{form5.reportunit}}</el-form-item>
-                                <el-form-item label="住址:" style="width: 15%">{{form5.address}}</el-form-item>
-                                <el-form-item label="联系方式:" style="width: 15%">{{form5.contact}}</el-form-item>
-                            </el-form>
-                        </div>
-                        <div style="text-align: left" v-if="update3">
-                            案件证人信息
-                            <hr>
-                            <el-form :model="form6" :inline="true">
-                                <el-form-item label="姓名:" style="width: 10%">{{form6.name}}</el-form-item>
-                                <el-form-item label="性别:" style="width: 10%">{{form6.gender}}</el-form-item>
-                                <el-form-item label="年龄:" style="width: 10%">{{form6.age}}</el-form-item>
-                                <el-form-item label="民族:" style="width: 10%">{{form6.nation}}</el-form-item>
-                                <el-form-item label="职业或身份:" style="width: 15%">{{form6.occupation}}</el-form-item>
-                                <el-form-item label="证件类型:" style="width: 10%">{{form6.cardtype}}</el-form-item>
-                                <el-form-item label="证件号:" style="width: 20%">{{form6.cardid}}</el-form-item>
-                                <el-form-item label="文化程度:" style="width: 10%">{{form6.education}}</el-form-item>
-                                <el-form-item label="年级:" style="width: 10%">{{form6.grade}}</el-form-item>
-                                <el-form-item label="学院或单位:" style="width: 15%">{{form6.reportunit}}</el-form-item>
-                                <el-form-item label="住址:" style="width: 15%">{{form6.address}}</el-form-item>
-                                <el-form-item label="联系方式:" style="width: 15%">{{form6.contact}}</el-form-item>
-                            </el-form>
-                        </div>
-                        <div style="text-align: left" v-if="update4">
-                            损失财物信息
-                            <hr>
-                            <el-form :model="form7" :inline="true">
-                                <el-form-item label="物品名称:" style="width: 10%">{{form7.lossoffinancialname}}
-                                </el-form-item>
-                                <el-form-item label="所有权性质:" style="width: 20%">{{form7.natureofownership}}
-                                </el-form-item>
-                                <el-form-item label="品牌:" style="width: 10%">{{form7.brand}}</el-form-item>
-                                <el-form-item label="型号:" style="width: 10%">{{form7.model}}</el-form-item>
-                                <el-form-item label="颜色:" style="width: 10%">{{form7.color}}</el-form-item>
-                                <el-form-item label="尺寸:" style="width: 10%">{{form7.size}}</el-form-item>
-                                <el-form-item label="其他特征:" style="width: 20%">{{form7.other}}</el-form-item>
-                                <el-form-item label="数量:" style="width: 10%">{{form7.number}}</el-form-item>
-                                <el-form-item label="购买时间:" style="width: 20%">{{form7.purchasetime}}</el-form-item>
-                                <el-form-item label="购置价格:" style="width: 10%">{{form7.purchasevalue}}</el-form-item>
-                                <el-form-item label="凭证照片:" style="width: 10%">
-                                    <img :src="img3" alt="没有照片" style="width: 100px;height: 100px">
-                                </el-form-item>
-                            </el-form>
-                        </div>
-                    </div>
-                    <div v-if="update" style="margin-top: 20px">
-                        <el-form :model="form">
-                            <el-form-item label="审核结果">
-                                <el-radio class="radio" v-model="form.audit" label="1">通过</el-radio>
-                                <el-radio class="radio" v-model="form.audit" label="0">不通过</el-radio>
-                            </el-form-item>
-                            <el-form-item label="原因">
-                                <el-input style="width: 80%" v-model="form.reason"></el-input>
-                            </el-form-item>
-                        </el-form>
-                    </div>
+            <!--弹出框--案件详细信息-->
+            <el-dialog title="案件详情" width="90%" :visible.sync="dialogVisible" :before-close="closeDetail">
+                <div style="text-align: left">
+                    报案类型
+                    <hr>
+                    <el-form :inline="true">
+                        <el-form-item label="案发时间:" style="width: 20%">{{caseDetail.occur_time}}</el-form-item>
+                        <el-form-item label="报案类型:" style="width: 20%">{{caseDetail.case_type}}</el-form-item>
+                        <el-form-item label="案件录入人:" style="width: 20%">{{caseDetail.registrant}}</el-form-item>
+                    </el-form>
                 </div>
-                <span slot="footer" class="dialog-footer">
-    <el-button v-if="update" @click="dialogVisible = false">取 消</el-button>
-    <el-button v-if="update" type="primary" @click="audit">确 定</el-button>
-  </span>
+                <div style="text-align: left">
+                    报案人信息
+                    <hr>
+                    <info :a="caseDetailReporter"></info>
+                </div>
+                <div v-if="!show_suffer" style="text-align: left;margin-bottom:25px;">报案人与受害者为同一人</div>
+                <div style="text-align: left" v-if="show_suffer">
+                    受害人信息
+                    <hr>
+                    <info :a="caseDetailSuffer"></info>
+                </div>
+                <div style="text-align: left">
+                    案发情况
+                    <hr>
+                    <el-form :inline="true">
+                        <el-form-item label="案发地点:" style="width: 30%">{{caseDetail.occur_place}}</el-form-item>
+                        <el-form-item label="案发时间段:" style="width: 50%">
+                            {{caseDetail.start_time}}—{{caseDetail.end_time}}
+                        </el-form-item>
+                        <el-form-item label="案情:" style="width: 100%">{{caseDetail.desc}}</el-form-item>
+                    </el-form>
+                </div>
+                <div style="text-align: left" v-if="show_suspect">嫌疑人信息
+                    <hr>
+                    <info :a="caseDetailSuspect"></info>
+                </div>
+                <div style="text-align: left" v-if="show_witness">
+                    案件证人信息
+                    <hr>
+                    <info :a="caseDetailWitness"></info>
+                </div>
+                <div style="text-align: left" v-if="show_property">
+                    损失财物信息
+                    <hr>
+                    <el-form :inline="true">
+                        <el-form-item label="物品名称:" style="width: 14%">{{caseDetailProperty.name}}</el-form-item>
+                        <el-form-item label="所有权性质:" style="width: 15%">
+                            {{caseDetailProperty.is_private===true?'私有':'非私有'}}
+                        </el-form-item>
+                        <el-form-item label="品牌:" style="width: 12%">{{caseDetailProperty.brand}}</el-form-item>
+                        <el-form-item label="型号:" style="width: 10%">{{caseDetailProperty.version}}</el-form-item>
+                        <el-form-item label="颜色:" style="width: 10%">{{caseDetailProperty.color}}</el-form-item>
+                        <el-form-item label="尺寸:" style="width: 10%">{{caseDetailProperty.size}}</el-form-item>
+                        <el-form-item label="其他特征:" style="width: 20%">{{caseDetailProperty.other_feature}}
+                        </el-form-item>
+                        <el-form-item label="数量:" style="width: 10%">{{caseDetailProperty.sum}}</el-form-item>
+                        <el-form-item label="购买时间:" style="width: 20%">{{caseDetailProperty.bought_time}}</el-form-item>
+                        <el-form-item label="购置价格:" style="width: 10%">{{caseDetailProperty.price}}</el-form-item>
+                    </el-form>
+                </div>
+                <div v-if="show_reviewResult" style="margin-top: 20px">
+                    <el-form :model="review">
+                        <el-form-item label="审核结果">
+                            <el-radio class="radio" v-model="review.yes_no" label="1">通过</el-radio>
+                            <el-radio class="radio" v-model="review.yes_no" label="0">不通过</el-radio>
+                        </el-form-item>
+                        <el-form-item label="原因">
+                            <el-input style="width: 80%" v-model="review.reason"></el-input>
+                        </el-form-item>
+                    </el-form>
+                </div>
+                <span slot="footer" class="dialog-footer" v-if="show_reviewResult">
+                   <el-button @click="dialogVisible = false">取 消</el-button>
+                   <el-button type="primary" @click="review_case(caseDetail.id)">确 定</el-button>
+                </span>
             </el-dialog>
         </div>
         <div style="text-align: left">
-            <el-button type="warning" @click="unreviewed(-1)">待审核案件</el-button>
-            <el-button type="success" @click="unreviewed(1)">审核通过案件</el-button>
-            <el-button type="danger" @click="unreviewed(0)">审核未通过案件</el-button>
+            <el-button type="warning" @click="changeReview(0)" id="topClick">待审核案件</el-button>
+            <el-button type="success" @click="changeReview(1)">审核通过案件</el-button>
+            <el-button type="danger" @click="changeReview(2)">审核未通过案件</el-button>
         </div>
         <div style="margin-top: 50px">
-            <el-table :data="tableData" border>
-                <el-table-column label="案件编号" align="center" prop="caseid"></el-table-column>
-                <el-table-column label="提交时间" align="center" prop="time"></el-table-column>
-                <el-table-column label="登记人" align="center" prop="dpeople"></el-table-column>
-                <el-table-column label="状态" align="center" prop="audit"></el-table-column>
+            <el-table :data="caseReviewData" border>
+                <el-table-column label="案件编号" align="center" prop="case_id"></el-table-column>
+                <el-table-column label="提交时间" align="center" prop="occur_time"></el-table-column>
+                <el-table-column label="登记人" align="center" prop="reporter.name"></el-table-column>
+                <el-table-column label="状态" align="center" prop="check_status"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                        <el-button @click="showDetail(scope.row)" type="text" size="small">查看</el-button>
                     </template>
                 </el-table-column>
             </el-table>
         </div>
-        <div style="text-align: center;margin-top: 20px">
-            <el-pagination @current-change="handleCurrentChange"
-                           :current-page.sync="currentPage"
-                           :page-size="10"
-                           layout="prev, pager, next, jumper"
-                           :total="pageCount">
-            </el-pagination>
-        </div>
     </div>
 </template>
-
 <script>
+    import Info from './multi/detailReview.vue'
+    import axios from 'axios';
+    import {
+        mapState,
+        mapMutations,
+    } from 'vuex'
+
     export default {
-        name: "caseReview",
+        components: {Info},
         data() {
             return {
-                img1: '',
-                img2: '',
-                img3: '',
-                update1: true,
-                update2: true,
-                update3: true,
-                update4: true,
-                dialogVisible: true,
-                state: '-1',
-                update: true,
-                currentPage: 1,
-                pageCount: 0,
-                tableData: [],
-                table: [],
-                form: {
-                    caseid: '',
-                    audit: '1',
-                    reason: ''
+                dialogVisible: false,
+                caseReviewData: [],//待审核，审核通过，审核未通过的案件列表
+                caseDetail: {},//弹出详情弹窗中的内容
+                caseDetailReporter: {},//弹出详情弹窗中的内容--报案人信息
+                caseDetailSuffer: {},//弹出详情弹窗中的内容--受害人信息
+                caseDetailSuspect: {},//弹出详情弹窗中的内容--嫌疑人信息
+                caseDetailWitness: {},//弹出详情弹窗中的内容--案件证人信息
+                caseDetailProperty: {},//弹出详情弹窗中的内容--财产损失信息
+
+                show_suffer: true,//是否展示受害人信息
+                show_suspect: true,//是否展示嫌疑人信息
+                show_witness: true,//是否展示案件证人信息
+                show_property: true,//是否展示财产损失情况
+                show_reviewResult: false,//是否展示审核结果
+                review: {
+                    yes_no: '',//审核案件是否通过
+                    reason: '',//案件审核是否通过的原因
                 },
-                form1: {},
-                form2: {},
-                form3: {},
-                form4: {},
-                form5: {},
-                form6: {},
-                form7: {},
             }
         },
         methods: {
-            audit() {
-                //审核案件
-                this.$post('/api/caseReview', this.form).then(res => {
-                    console.log(res);
-                    this.dialogVisible = false;
-                    this.unreviewed(-1);
-                    this.form = {};
-                })
-            },
-            unreviewed(id) {
-                //查询案件
-                this.state = id;
-                if (id === -1) {
-                    this.update = true;
-                } else {
-                    this.update = false;
+            changeReview(id) {
+                //通过点击按钮，切换查看待审核，审核通过，审核未通过案件
+                if (id === 0) {
+                    this.caseReviewData = this.caseReview_noSee;
+                    this.show_reviewResult = true;
+                } else if (id === 1) {
+                    this.caseReviewData = this.caseReview_yes;
+                    this.show_reviewResult = false;
+                } else if (id === 2) {
+                    this.caseReviewData = this.caseReview_no;
+                    this.show_reviewResult = false;
                 }
-                this.$get(`/api/findAudit/${id}/1`).then(res => {
-                    console.log(res);
-                    this.tableData = res.data.items;
-                    this.pageCount = res.data.totalNum;
-                })
             },
-            handleClose(done) {
-                //关闭弹框前清空所有数据
-                this.img1 = '';
-                this.img2 = '';
-                this.img3 = '';
-                this.form1 = {};
-                this.form2 = {};
-                this.form3 = {};
-                this.form4 = {};
-                this.form5 = {};
-                this.form6 = {};
-                this.form7 = {};
-                this.update1 = false;
-                this.update2 = false;
-                this.update3 = false;
-                this.update4 = false;
-                done();
-            },
-            handleClick(row) {
-                //查看案件详情
-                console.log(row);
-                this.form.caseid = row.caseid;
+            showDetail(row) {
+                //查看案件详情,判断各个模块是否展示
                 this.dialogVisible = true;
-                this.$get(`/api/dealingCaseId/?caseid=${row.caseid}`).then(res => {
-                    console.log(res);
-                    this.form1 = res.data.caseRecord;//报案类型
-                    this.form4 = res.data.caseRecord;//案发情况
-                    if (res.data.lossoffinancial.lossoffinancialname != null) {
-                        this.update4 = true;
-                        this.form7 = res.data.lossoffinancial;//损失物品信息
-                        this.img3 = this.DEFINES.url + res.data.lossoffinancial.certificate;
-                    }
-                    let item = res.data.casePeople;
-                    for (let i = 0; i < item.length; i++) {
-                        if (item[i].sufferer == 1) {
-                            this.form2 = item[i];//报案人信息
-                            this.img1 = this.DEFINES.url + item[i].cardimg;
-                        } else if (item[i].sufferer == 2) {
-                            this.update1 = true;
-                            this.form3 = item[i];//受害人信息
-                            this.img2 = this.DEFINES.url + item[i].cardimg;
-                        } else if (item[i].sufferer == 3) {
-                            this.update2 = true;
-                            this.form5 = item[i];//嫌疑人信息
-                        } else if (item[i].sufferer == 4) {
-                            this.update3 = true;
-                            this.form6 = item[i];//案件证人信息
-                        }
-                    }
-                })
+                this.caseDetail = row;
+
+                //报案类型模块
+                this.caseDetailReporter = row.reporter;
+
+                //判断受害人模块是否展示
+                if (!row.sufferer) {
+                    this.show_suffer = false;
+                } else {
+                    this.caseDetailSuffer = row.sufferer;
+                    this.show_suffer = true;
+                }
+
+                //判断嫌疑人模块是否展示
+                if (!row.suspect) {
+                    this.show_suspect = false;
+                } else {
+                    this.caseDetailSuspect = row.suspect;
+                    this.show_suspect = true;
+                }
+
+                //判断案件证人模块是否展示
+                if (!row.witness) {
+                    this.show_witness = false;
+                } else {
+                    this.caseDetailWitness = row.witness;
+                    this.show_witness = true;
+                }
+
+                //判断财产损失模块是否展示
+                if (!row.property_loss) {
+                    this.show_property = false;
+                } else {
+                    this.caseDetailProperty = row.property_loss;
+                    this.show_property = true;
+                }
             },
-            handleCurrentChange() {
-                //分页
-                this.$get(`/api/findAudit/${this.state}/${this.currentPage}`).then(res => {
-                    console.log(res);
-                    this.tableData = res.data.items;
-                    this.pageCount = res.data.totalNum;
-                })
-            }
+            review_case(id) {
+                let qs = require('qs');
+                let instance = axios.create({
+                    headers: {'content-type': 'application/x-www-form-urlencoded'}
+                });
+                let data = qs.stringify({});
+                instance.put("http://120.79.137.221:801/api/v1/cases/" + id + "/", data)
+                    .then((res) => {
+                        this.closeDetail();
+                        this.$message({
+                            message: "审核成功!",
+                            type: 'success'
+                        })
+                    })
+                    .catch((err) => {
+                        this.closeDetail();
+                        this.$message({
+                            message: "审核失败!",
+                            type: 'error'
+                        })
+                    });
+            },
+            closeDetail() {
+                //关闭弹框前清空所有数据
+                this.caseReviewData = [];
+                this.caseDetail = {};
+                this.caseDetailReporter = {};
+                this.caseDetailSuffer = {};
+                this.caseDetailSuspect = {};
+                this.caseDetailWitness = {};
+                this.caseDetailProperty = {};
+                this.show_suffer = true;
+                this.show_suspect = true;
+                this.show_witness = true;
+                this.show_property = true;
+                this.show_reviewResult = false;
+                this.dialogVisible = false;
+            },
         },
-        mounted: function () {
-            this.unreviewed(-1);
+        mounted() {
+            // document.getElementById("topClick").click();
+            this.changeReview(0);
         },
         watch: {
-            tableData: function () {
-                for (let i = 0; i < this.tableData.length; i++) {
-                    if (this.tableData[i].audit == '-1') {
-                        this.tableData[i].audit = '待审核'
-                    } else if (this.tableData[i].audit == '1') {
-                        this.tableData[i].audit = '审核通过'
-                    } else {
-                        this.tableData[i].audit = '审核未通过'
+            caseReviewData: function () {
+                let length = this.caseReviewData.length;
+                for (let i = 0; i < length; i++) {
+                    if (this.caseReviewData[i].check_status === 0) {
+                        this.caseReviewData[i].check_status = '待审核'
+                    } else if (this.caseReviewData[i].check_status === 1) {
+                        this.caseReviewData[i].check_status = '审核通过'
+                    } else if (this.caseReviewData[i].check_status === 2) {
+                        this.caseReviewData[i].check_status = '审核未通过'
                     }
                 }
             }
@@ -308,11 +245,18 @@
         computed: {
             user() {
                 return JSON.parse(sessionStorage.userData)
-            }
+            },
+            ...mapState({
+                caseReview_noSee: state => state.caseReview_noSee,
+                caseReview_yes: state => state.caseReview_yes,
+                caseReview_no: state => state.caseReview_no,
+            })
         }
     }
 </script>
-
 <style scoped>
-
+    .el-form-item {
+        color: red;
+    }
 </style>
+

@@ -13,7 +13,7 @@ const config = {
     entry: path.join(__dirname, 'index.js'),
     output: {
         filename: 'bundle.[hash:8].js',
-        path: path.join(__dirname, 'Blog'),
+        path: path.join(__dirname, 'caseCenter'),
         publicPath: "/"
     },
     module: {
@@ -66,7 +66,9 @@ if (isDev) {
         overlay: {
             errors: true,
         },
-        historyApiFallback: true,
+        historyApiFallback: {
+            index: '/index.html'
+        },
         hot: true,
     };
     config.module.rules.push({

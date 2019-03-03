@@ -11,23 +11,13 @@
     </div>
 </template>
 <script>
-    import inCampusCaseRegister from './in-campus-case-register.vue'
-    import outCampusCaseRegister from './out-campus-case-register.vue'
+    import inCampusCaseRegister from './details/in-campus-case-register.vue'
+    import outCampusCaseRegister from './details/out-campus-case-register.vue'
     export default {
-        data () {
-            return {
-
-            }
-        },
-        methods: {},
         components: {
             inCampusCaseRegister,
             outCampusCaseRegister
         },
-        mounted: function () {
-
-        },
-        watch: {}
     }
 </script>
 <style scoped>
