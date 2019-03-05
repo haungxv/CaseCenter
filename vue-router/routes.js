@@ -11,6 +11,9 @@ import stayCase from '../src/components/stayCase.vue'
 import workCase from '../src/components/workCase.vue'
 import fileCase from '../src/components/fileCase.vue'
 import hello from '../src/components/hello.vue'
+import caseStatic from '../src/components/caseStatic.vue'
+import trackRecord from '../src/components/trackRecord.vue'
+import suspectBank from '../src/components/suspectBank.vue'
 
 
 export default [
@@ -65,6 +68,18 @@ export default [
             {
                 path: 'fileCase',
                 component: fileCase
+            },
+            {
+                path: 'caseStatic',
+                component: caseStatic
+            },
+            {
+                path: 'suspectBank',
+                component: suspectBank
+            },
+            {
+                path: 'trackRecord',
+                component: trackRecord
             },
         ]
     },
