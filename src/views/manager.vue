@@ -11,15 +11,13 @@
                              active-text-color="#20a0ff"
                              :default-active="activeIndex" :unique-opened="true">
                         <el-menu-item v-if="on_off" index="/manager/caseReview" id="leftClick"><span>案件审核</span></el-menu-item>
-                        <el-menu-item v-if="on_off1" index="/manager/reviewResult"><span>审核结果</span></el-menu-item>
                         <el-menu-item index="/manager/caseRegistration"><span>案件登记</span></el-menu-item>
                         <el-menu-item index="/manager/stayCase"><span>待办案件</span></el-menu-item>
                         <el-menu-item index="/manager/workCase"><span>在办案件</span></el-menu-item>
                         <el-menu-item index="/manager/historyCase"><span>历史案件</span></el-menu-item>
                         <el-menu-item index="/manager/fileCase"><span>归档案件</span></el-menu-item>
-                        <el-menu-item v-if="on_off" index="/manager/addAccount"><span>新增账户</span></el-menu-item>
-                        <el-menu-item index="/manager/setAccount"><span>账户设置</span></el-menu-item>
                         <el-menu-item v-if="on_off" index="/manager/manageAccount"><span>账户管理</span></el-menu-item>
+                        <el-menu-item v-if="on_off" index="/manager/addAccount"><span>新增账户</span></el-menu-item>
                         <el-menu-item index="/manager/manageLabel"><span>标签管理</span></el-menu-item>
                     </el-menu>
                 </div>
@@ -121,7 +119,7 @@
         },
         mounted() {
             this.getCases();
-            document.getElementById("leftClick").click();
+            // document.getElementById("leftClick").click();
         },
     }
 </script>

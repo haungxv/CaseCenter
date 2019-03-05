@@ -8,7 +8,6 @@
                     <el-date-picker
                             v-model="caseInformation.caseTime"
                             type="datetime"
-                            @change="getTime"
                             placeholder="选择日期时间">
                     </el-date-picker>
                 </el-form-item>
@@ -53,7 +52,6 @@
                     <el-date-picker
                             v-model="caseInformation.period"
                             type="datetimerange"
-                            @change="getDate"
                             placeholder="选择时间范围">
                     </el-date-picker>
                 </el-form-item>
@@ -125,7 +123,6 @@
                     <el-form-item label="购买时间">
                         <el-date-picker
                                 v-model="loss.bought_time"
-                                @change="getshijian"
                                 type="date"
                                 placeholder="选择日期">
                         </el-date-picker>
@@ -139,24 +136,24 @@
         <div style="text-align: left;margin-top: 20px">
             <hr>
             <span style="margin: 0 20px">报案人是否通知公安机关等部门:</span>
-            <el-radio class="radio" v-model="called_police" label="true">是</el-radio>
-            <el-radio class="radio" v-model="called_police" label="false">否</el-radio>
+            <el-radio class="radio" v-model="called_police" label=true>是</el-radio>
+            <el-radio class="radio" v-model="called_police" label=false>否</el-radio>
         </div>
         <div style="text-align: left;margin-top: 20px">
             案件处置结果
             <hr>
             <span style="margin-right: 20px">报案人是否查看监控:</span>
-            <el-radio class="radio" v-model="saw_monitoring" label="true">是</el-radio>
-            <el-radio class="radio" v-model="saw_monitoring" label="false">否</el-radio>
+            <el-radio class="radio" v-model="saw_monitoring" label=true>是</el-radio>
+            <el-radio class="radio" v-model="saw_monitoring" label=false>否</el-radio>
         </div>
         <div style="text-align: left;margin-top: 20px">
-            <el-button type="success" @click="report('caseInformation')">报 案</el-button>
+            <el-button type="success" @click="report()">报 案</el-button>
         </div>
     </div>
 </template>
 <script>
 
-    import Info from '../multi/detailRegister.vue'
+    import Info from '../multi/register_in.vue'
     import axios from 'axios';
 
     export default {
@@ -293,15 +290,15 @@
                     age: '',
                     grade: '',
                     gender: true,
-                    education: '',
-                    home_addr: '',
-                    identity_document: '',
-                    identity_number: '',
-                    name: '',
-                    nationa: '',
-                    phone: '',
-                    profession: '',
-                    work_place: ''
+                    education: 0,
+                    home_addr: '宿舍',
+                    identity_document: 1,
+                    identity_number: '123',
+                    name: '的事实',
+                    nation: '中国',
+                    phone: '123',
+                    profession: 3,
+                    work_place: '保卫处'
                 },
 
                 samePerson: '1',//报案人与受害人是否为同一人,1为是,0为否
@@ -309,7 +306,7 @@
                 sufferer: {//受害人信息
                     age: '',
                     grade: '',
-                    gender: true,
+                    gender: '',
                     education: '',
                     home_addr: '',
                     identity_document: '',
@@ -361,7 +358,7 @@
                     bought_time: '',
                     brand: '',
                     color: '',
-                    is_private:'',
+                    is_private: '',
                     name: '',
                     other_feature: '',
                     price: '',
@@ -370,49 +367,48 @@
                     version: '',
                 },
 
-                called_police: 'false',//是否通知公安机关等部门
-                saw_monitoring: 'false',//是否查看监控
+                called_police: false,//是否通知公安机关等部门
+                saw_monitoring: false,//是否查看监控
             }
         },
         methods: {
-            getshijian(date) {
-                this.loss.purchaseTimea = date;
-            },
-            getTime(date) {
-                this.caseInformation.caseTime = date;
-                console.log(this.caseInformation.caseTime)
-            },
-            getDate(val) {
-                this.period = val;
-                console.log(this.period);
-            },
-
             report() {
                 //案件录入
+                if (!this.show_suffer) {
+                    this.sufferer = null;
+                }
+                if (!this.show_suspect) {
+                    this.suspect = null;
+                }
+                if (!this.show_witness) {
+                    this.witness = null;
+                }
+                if (!this.show_loss) {
+                    this.loss = null;
+                }
                 let qs = require('qs');
                 let instance = axios.create({
-                    headers: {'content-type': 'application/x-www-form-urlencoded'}
+                    headers: {'Content-Type': 'application/json'}
                 });
-                let data = qs.stringify({
-                    occur_time: this.caseInformation.caseTime,
-
-                    resporter: this.resporter,
-                    sufferer: this.sufferer,
-                    suspect: this.suspect,
-                    witness: this.witness,
-                    property_loss: this.loss,
-                    deal_status: 0,
-                    check_status: 0,
-                    occur_place: this.occur_place,
-                    start_time: this.occur_time,
-                    end_time: this.occur_time,
-                    desc: this.desc,
-                    called_police: this.called_police,
-                    saw_monitoring: this.saw_monitoring,
-                    registrant: this.registrant,
-                    case_type: this.case_type,
-                });
-                instance.post("http://120.79.137.221:801/api/v1/cases/", data)
+                let data = {
+                    "occur_time": "2019-04-09T16:00:00",
+                    // "registrant": this.caseInformation.registrant,
+                    "case_type": 1,
+                    "reporter": this.reporter,
+                    "sufferer": this.sufferer,
+                    "occur_place": this.caseInformation.occur_place,
+                    "start_time": "2019-04-09T16:00:00",
+                    "end_time": "2019-04-09T16:00:00",
+                    "desc": this.caseInformation.desc,
+                    "suspect": this.suspect,
+                    "witness": this.witness,
+                    "property_loss": this.loss,
+                    "deal_status": 0,
+                    "check_status": 0,
+                    "called_police": this.called_police,
+                    "saw_monitoring": this.saw_monitoring,
+                };
+                axios.post("http://120.79.137.221:801/api/v1/cases/", data)
                     .then((res) => {
 
                     })

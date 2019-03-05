@@ -1,342 +1,219 @@
 <template>
     <div>
-        <div>
-            <!--编辑弹出框-->
-            <el-dialog
-                    title="案件详情"
-                    size="large"
-                    :visible.sync="dialogVisible"
-                    :before-close="handleClose">
-                <div>
-                    <div>
-                        <div style="text-align: left">
-                            报案类型<hr>
-                            <el-form :model="form1" :inline="true">
-                                <el-form-item label="案发时间:" style="width: 20%">{{form2.spare1}}</el-form-item>
-                                <el-form-item label="报案类型:" style="width: 20%">{{form1.casetype}}</el-form-item>
-                                <el-form-item label="案件录入人:" style="width: 20%">{{form1.spare2}}</el-form-item>
-                            </el-form>
-                        </div>
-                        <div style="text-align: left">
-                            报案人信息<hr>
-                            <el-form :model="form2" :inline="true">
-                                <el-form-item label="姓名:" style="width: 10%">{{form2.name}}</el-form-item>
-                                <el-form-item label="性别:" style="width: 10%">{{form2.gender}}</el-form-item>
-                                <el-form-item label="年龄:" style="width: 10%">{{form2.age}}</el-form-item>
-                                <el-form-item label="民族:" style="width: 10%">{{form2.nation}}</el-form-item>
-                                <el-form-item label="职业或身份:" style="width: 15%">{{form2.occupation}}</el-form-item>
-                                <el-form-item label="证件类型:" style="width: 10%">{{form2.cardtype}}</el-form-item>
-                                <el-form-item label="证件号:" style="width: 20%">{{form2.cardid}}</el-form-item>
-                                <el-form-item label="文化程度:" style="width: 10%">{{form2.education}}</el-form-item>
-                                <el-form-item label="年级:" style="width: 10%">{{form2.grade}}</el-form-item>
-                                <el-form-item label="学院或单位:" style="width: 15%">{{form2.reportunit}}</el-form-item>
-                                <el-form-item label="住址:" style="width: 15%">{{form2.address}}</el-form-item>
-                                <el-form-item label="联系方式:" style="width: 15%">{{form2.contact}}</el-form-item>
-                                <el-form-item label="照片:" style="width: 10%">
-                                    <img :src="img1" alt="没有照片" style="width: 100px;height: 100px">
-                                </el-form-item>
-                            </el-form>
-                        </div>
-                        <div style="text-align: left" v-if="update1">
-                            受害人信息<hr>
-                            <el-form :model="form3" :inline="true">
-                                <el-form-item label="姓名:" style="width: 10%">{{form3.name}}</el-form-item>
-                                <el-form-item label="性别:" style="width: 10%">{{form3.gender}}</el-form-item>
-                                <el-form-item label="年龄:" style="width: 10%">{{form3.age}}</el-form-item>
-                                <el-form-item label="民族:" style="width: 10%">{{form3.nation}}</el-form-item>
-                                <el-form-item label="职业或身份:" style="width: 15%">{{form3.occupation}}</el-form-item>
-                                <el-form-item label="证件类型:" style="width: 10%">{{form3.cardtype}}</el-form-item>
-                                <el-form-item label="证件号:" style="width: 20%">{{form3.cardid}}</el-form-item>
-                                <el-form-item label="文化程度:" style="width: 10%">{{form3.education}}</el-form-item>
-                                <el-form-item label="年级:" style="width: 10%">{{form3.grade}}</el-form-item>
-                                <el-form-item label="学院或单位:" style="width: 15%">{{form3.reportunit}}</el-form-item>
-                                <el-form-item label="住址:" style="width: 15%">{{form3.address}}</el-form-item>
-                                <el-form-item label="联系方式:" style="width: 15%">{{form3.contact}}</el-form-item>
-                                <el-form-item label="照片:" style="width: 10%">
-                                    <img :src="img2" alt="没有照片" style="width: 100px;height: 100px">
-                                </el-form-item>
-                            </el-form>
-                        </div>
-                        <div style="text-align: left">
-                            案发情况<hr>
-                            <el-form :model="form4" :inline="true">
-                                <el-form-item label="案发地点:" style="width: 30%">{{form4.caseaddress}}</el-form-item>
-                                <el-form-item label="案发时间段:" style="width: 50%">{{form2.peroid}}</el-form-item>
-                                <el-form-item label="案情:" style="width: 100%">{{form4.casedescription}}</el-form-item>
-                            </el-form>
-                        </div>
-                        <div style="text-align: left" v-if="update2">
-                            嫌疑人信息<hr>
-                            <el-form :model="form5" :inline="true">
-                                <el-form-item label="姓名:" style="width: 10%">{{form5.name}}</el-form-item>
-                                <el-form-item label="性别:" style="width: 10%">{{form5.gender}}</el-form-item>
-                                <el-form-item label="年龄:" style="width: 10%">{{form5.age}}</el-form-item>
-                                <el-form-item label="民族:" style="width: 10%">{{form5.nation}}</el-form-item>
-                                <el-form-item label="职业或身份:" style="width: 15%">{{form5.occupation}}</el-form-item>
-                                <el-form-item label="证件类型:" style="width: 10%">{{form5.cardtype}}</el-form-item>
-                                <el-form-item label="证件号:" style="width: 20%">{{form5.cardid}}</el-form-item>
-                                <el-form-item label="文化程度:" style="width: 10%">{{form5.education}}</el-form-item>
-                                <el-form-item label="年级:" style="width: 10%">{{form5.grade}}</el-form-item>
-                                <el-form-item label="学院或单位:" style="width: 15%">{{form5.reportunit}}</el-form-item>
-                                <el-form-item label="住址:" style="width: 15%">{{form5.address}}</el-form-item>
-                                <el-form-item label="联系方式:" style="width: 15%">{{form5.contact}}</el-form-item>
-                            </el-form>
-                        </div>
-                        <div style="text-align: left" v-if="update3">
-                            案件证人信息<hr>
-                            <el-form :model="form6" :inline="true">
-                                <el-form-item label="姓名:" style="width: 10%">{{form6.name}}</el-form-item>
-                                <el-form-item label="性别:" style="width: 10%">{{form6.gender}}</el-form-item>
-                                <el-form-item label="年龄:" style="width: 10%">{{form6.age}}</el-form-item>
-                                <el-form-item label="民族:" style="width: 10%">{{form6.nation}}</el-form-item>
-                                <el-form-item label="职业或身份:" style="width: 15%">{{form6.occupation}}</el-form-item>
-                                <el-form-item label="证件类型:" style="width: 10%">{{form6.cardtype}}</el-form-item>
-                                <el-form-item label="证件号:" style="width: 20%">{{form6.cardid}}</el-form-item>
-                                <el-form-item label="文化程度:" style="width: 10%">{{form6.education}}</el-form-item>
-                                <el-form-item label="年级:" style="width: 10%">{{form6.grade}}</el-form-item>
-                                <el-form-item label="学院或单位:" style="width: 15%">{{form6.reportunit}}</el-form-item>
-                                <el-form-item label="住址:" style="width: 15%">{{form6.address}}</el-form-item>
-                                <el-form-item label="联系方式:" style="width: 15%">{{form6.contact}}</el-form-item>
-                            </el-form>
-                        </div>
-                        <div style="text-align: left" v-if="update4">
-                            损失财物信息<hr>
-                            <el-form :model="form7" :inline="true">
-                                <el-form-item label="物品名称:" style="width: 10%">{{form7.lossoffinancialname}}</el-form-item>
-                                <el-form-item label="所有权性质:" style="width: 20%">{{form7.natureofownership}}</el-form-item>
-                                <el-form-item label="品牌:" style="width: 10%">{{form7.brand}}</el-form-item>
-                                <el-form-item label="型号:" style="width: 10%">{{form7.model}}</el-form-item>
-                                <el-form-item label="颜色:" style="width: 10%">{{form7.color}}</el-form-item>
-                                <el-form-item label="尺寸:" style="width: 10%">{{form7.size}}</el-form-item>
-                                <el-form-item label="其他特征:" style="width: 20%">{{form7.other}}</el-form-item>
-                                <el-form-item label="数量:" style="width: 10%">{{form7.number}}</el-form-item>
-                                <el-form-item label="购买时间:" style="width: 20%">{{form7.purchasetime}}</el-form-item>
-                                <el-form-item label="购置价格:" style="width: 10%">{{form7.purchasevalue}}</el-form-item>
-                                <el-form-item label="凭证照片:" style="width: 10%">
-                                    <img :src="img3" alt="没有照片" style="width: 100px;height: 100px">
-                                </el-form-item>
-                            </el-form>
-                        </div>
-                    </div>
-                </div>
-            </el-dialog>
-        </div>
+        <!--编辑弹出框-->
+        <el-dialog title="案件详情" width="90%" :visible.sync="dialogVisible" :before-close="closeDetail">
+            <case-dialog :caseDetail="caseDetail"
+                         :caseDetailReporter="caseDetailReporter"
+                         :caseDetailSuffer="caseDetailSuffer"
+                         :caseDetailSuspect="caseDetailSuspect"
+                         :caseDetailWitness="caseDetailWitness"
+                         :caseDetailProperty="caseDetailProperty"
+                         :show_suffer="show_suffer"
+                         :show_suspect="show_suspect"
+                         :show_witness="show_witness"
+                         :show_property="show_property"
+            ></case-dialog>
+        </el-dialog>
         <div style="text-align: left">
             时间:
             <el-date-picker v-model="time" type="date" placeholder="请选择日期" @change="getTime"></el-date-picker>
-            <el-button type="success" style="margin: 0 20px" @click="inquire">搜索</el-button>
+            <el-button type="success" style="margin: 0 20px" @click="search">搜索</el-button>
         </div>
         <div style="margin-top: 50px">
-            <el-table :data="tableData" border>
-                <el-table-column label="案件编号" align="center" prop="caseid" width="150"></el-table-column>
-                <el-table-column label="报案人姓名" align="center" prop="name"></el-table-column>
-                <el-table-column label="性别" align="center" prop="gender"></el-table-column>
-                <el-table-column label="年龄" align="center" prop="age"></el-table-column>
-                <el-table-column label="联系方式" align="center" prop="contact"></el-table-column>
-                <el-table-column label="报案时间" align="center" prop="spare1" width="200"></el-table-column>
-                <el-table-column label="案件类型" align="center" prop="caseType" width="300"></el-table-column>
-                <el-table-column label="上报单位" align="center" prop="reportunit"></el-table-column>
-                <el-table-column label="上报人员" align="center" prop="education"></el-table-column>
-                <el-table-column label="状态" align="center" prop="spare3"></el-table-column>
+            <el-table :data="stayCaseData" border>
+                <el-table-column label="案件编号" align="center" prop="case_id" width="100"></el-table-column>
+                <el-table-column label="报案人姓名" align="center" prop="reporter.name" width="150"></el-table-column>
+                <el-table-column label="性别" align="center" prop="reporter.gender"></el-table-column>
+                <el-table-column label="年龄" align="center" prop="reporter.age"></el-table-column>
+                <el-table-column label="联系方式" align="center" prop="reporter.phone" width="150"></el-table-column>
+                <el-table-column label="报案时间" align="center" prop="occur_time" width="200"></el-table-column>
+                <el-table-column label="案件类型" align="center" prop="case_type" width="250"></el-table-column>
+                <el-table-column label="上报单位" align="center" prop="work_place" width="150"></el-table-column>
+                <el-table-column label="上报人员" align="center" prop="registrant.name" width="150"></el-table-column>
+                <el-table-column label="状态" align="center" prop="check_status" width="150"></el-table-column>
                 <el-table-column label="操作" align="center" fixed="right" width="150">
                     <template slot-scope="scope">
-                        <el-button @click="lookCase(scope.row)" type="text" size="small">查看详情</el-button>
-                        <el-button @click="handleClick(scope.row)" type="text" size="small">开始处理</el-button>
+                        <el-button @click="showDetail(scope.row)" type="text" size="small">查看详情</el-button>
+                        <el-button @click="dealCase(scope.row)" type="text" size="small">开始处理</el-button>
                     </template>
                 </el-table-column>
             </el-table>
         </div>
-        <div style="text-align: center;margin-top: 20px">
-            <el-pagination  @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="10" layout="prev, pager, next, jumper" :total="pageCount">
-            </el-pagination>
-        </div>
     </div>
 </template>
 <script>
+    import caseDialog from './multi/caseDialog.vue'
+    import axios from 'axios';
+    import {
+        mapState,
+        mapMutations,
+    } from 'vuex'
+
     export default {
-        data () {
+        components: {caseDialog},
+        data() {
             return {
-                img1:'',
-                img2:'',
-                img3:'',
-                update1:false,
-                update2:false,
-                update3:false,
-                update4:false,
-                dialogVisible:false,
-                time:'',
-                date:'',
-                currentPage:1,
-                pageCount:0,
-                tableData:[],
-                form1:{},
-                form2:{},
-                form3:{},
-                form4:{},
-                form5:{},
-                form6:{},
-                form7:{},
+                dialogVisible: false,//判断弹出框是否展示
+                stayCaseData: [],//待办案件列表
+                caseDetail: {},//弹出详情弹窗中的内容
+                caseDetailReporter: {},//弹出详情弹窗中的内容--报案人信息
+                caseDetailSuffer: {},//弹出详情弹窗中的内容--受害人信息
+                caseDetailSuspect: {},//弹出详情弹窗中的内容--嫌疑人信息
+                caseDetailWitness: {},//弹出详情弹窗中的内容--案件证人信息
+                caseDetailProperty: {},//弹出详情弹窗中的内容--财产损失信息
+
+                show_suffer: true,//是否展示受害人信息
+                show_suspect: true,//是否展示嫌疑人信息
+                show_witness: true,//是否展示案件证人信息
+                show_property: true,//是否展示财产损失情况
+
+                time: ''//搜索时的时间
             }
         },
         methods: {
-            getTime(val){
-                //时间格式转换
-                this.date = val;
-                console.log(val);
-            },
-            inquire(){
-                //查询
-                if(this.time!=''){
-                    this.$get(`/api/searchByTimeDealingCase/${this.currentPage}/1/${this.date}`).then(res=>{
-                        console.log(res);
-                        if(res.data!=''){
-                            let item = res.data.items;
-                            let Data = [];
-                            let data = {};
-                            for(let i=0;i<item.length;i++){
-                                data = {
-                                    caseid:item[i].setCasePeople.caseid,
-                                    name:item[i].setCasePeople.name,
-                                    gender:item[i].setCasePeople.gender,
-                                    age:item[i].setCasePeople.age,
-                                    contact:item[i].setCasePeople.contact,
-                                    spare1:item[i].setCasePeople.spare1,
-                                    caseType:item[i].caseType,
-                                    reportunit:item[i].reportunit,
-                                    education:item[i].education,
-                                    spare3:item[i].spare3,
-                                };
-                                Data.push(data);
-                            }
-                            this.tableData = Data;
-                            this.pageCount = res.data.totalNum;
-                        }else {
-                            this.tableData = [];
-                        }
-                    })
-                }else {
-                    this.load();
-                }
-            },
-            handleClose(done){
-                //关闭弹框前清空所有数据
-                this.img1 = '';
-                this.img2 = '';
-                this.img3 = '';
-                this.form1 = {};
-                this.form2 = {};
-                this.form3 = {};
-                this.form4 = {};
-                this.form5 = {};
-                this.form6 = {};
-                this.form7 = {};
-                this.update1 = false;
-                this.update2 = false;
-                this.update3 = false;
-                this.update4 = false;
-                done();
-            },
-            lookCase(row){
-                //查看案件详情
+            showDetail(row) {
+                //查看案件详情,判断各个模块是否展示
                 this.dialogVisible = true;
-                this.$get(`/api/dealingCaseId/?caseid=${row.caseid}`).then(res=>{
-                    console.log(res);
-                    this.form1=res.data.caseRecord;//报案类型
-                    this.form4=res.data.caseRecord;//案发情况
-                    if(res.data.lossoffinancial.lossoffinancialname!=null){
-                        this.update4=true;
-                        this.form7=res.data.lossoffinancial;//损失物品信息
-                        this.img3=this.DEFINES.url+res.data.lossoffinancial.certificate;
-                    }
-                    let item = res.data.casePeople;
-                    for(let i=0;i<item.length;i++){
-                        if(item[i].sufferer==1){
-                            this.form2=item[i];//报案人信息
-                            this.img1=this.DEFINES.url+item[i].cardimg;
-                        }else if (item[i].sufferer==2){
-                            this.update1=true;
-                            this.form3=item[i];//受害人信息
-                            this.img2=this.DEFINES.url+item[i].cardimg;
-                        }else if(item[i].sufferer==3){
-                            this.update2=true;
-                            this.form5=item[i];//嫌疑人信息
-                        }else if(item[i].sufferer==4){
-                            this.update3=true;
-                            this.form6=item[i];//案件证人信息
-                        }
-                    }
-                })
-            },
-            handleClick(row){
-                //处理案件状态
-                console.log(row);
-                this.$get(`/api/changeCase?isdelete=2&caseid=${row.caseid}`).then(res=>{
-                    console.log(res);
-                    this.load();
-                    this.$message({
-                        message: '开始处理！',
-                        type: 'success'
-                    });
-                })
-            },
-            load(){
-                //获取案件列表
-                this.$get(`/api/daelingCase/${this.currentPage}/1`).then(res=>{
-                    console.log(res);
-                    if(res.data!=''){
-                        let item = res.data.items;
-                        let Data = [];
-                        let data = {};
-                        for(let i=0;i<item.length;i++){
-                            data = {
-                                caseid:item[i].setCasePeople.caseid,
-                                name:item[i].setCasePeople.name,
-                                gender:item[i].setCasePeople.gender,
-                                age:item[i].setCasePeople.age,
-                                contact:item[i].setCasePeople.contact,
-                                spare1:item[i].setCasePeople.spare1,
-                                caseType:item[i].caseType,
-                                reportunit:item[i].reportunit,
-                                education:item[i].education,
-                                spare3:item[i].spare3,
-                            };
-                            Data.push(data);
-                        }
-                        this.tableData = Data;
-                        this.pageCount = res.data.totalNum;
+                this.caseDetail = row;
 
-                    }else {
-                        this.tableData = [];
-                    }
-                })
-            },
-            handleCurrentChange(){
-                //分页
-                if(this.time!=''){
-                    this.inquire(this.currentPage);
-                }else {
-                    this.load(this.currentPage);
+                //报案人模块
+                this.caseDetailReporter = row.reporter;
+
+                //判断受害人模块是否展示
+                if (!row.sufferer) {
+                    this.show_suffer = false;
+                } else {
+                    this.caseDetailSuffer = row.sufferer;
+                    this.show_suffer = true;
                 }
+
+                //判断嫌疑人模块是否展示
+                if (!row.suspect) {
+                    this.show_suspect = false;
+                } else {
+                    this.caseDetailSuspect = row.suspect;
+                    this.show_suspect = true;
+                }
+
+                //判断案件证人模块是否展示
+                if (!row.witness) {
+                    this.show_witness = false;
+                } else {
+                    this.caseDetailWitness = row.witness;
+                    this.show_witness = true;
+                }
+
+                //判断财产损失模块是否展示
+                if (!row.property_loss) {
+                    this.show_property = false;
+                } else {
+                    this.caseDetailProperty = row.property_loss;
+                    this.show_property = true;
+                }
+            },
+            closeDetail() {
+                //关闭弹框前清空所有数据
+                this.caseDetail = {};
+                this.caseDetailReporter = {};
+                this.caseDetailSuffer = {};
+                this.caseDetailSuspect = {};
+                this.caseDetailWitness = {};
+                this.caseDetailProperty = {};
+                this.show_suffer = true;
+                this.show_suspect = true;
+                this.show_witness = true;
+                this.show_property = true;
+                this.dialogVisible = false;
+            },
+
+            changeTime(time) {
+                //将中国标准时间转换为年-月-日格式
+                let year = time.getFullYear();
+                let month = time.getMonth() + 1;
+                let day = time.getDate();
+                return year + "-" + this.formTime(month) + "-" + this.formTime(day);
+            },
+            formTime(str) {
+                //规范分钟和秒的格式
+                return str > 9 ? (str) : ("0" + str);
+            },
+            search() {
+                console.log(this.time);
+                if (this.time !== '' && this.time !== null) {
+                    this.time = this.changeTime(this.time);
+                    let array = [];
+                    let length = this.stayCaseData.length;
+                    for (let i = 0; i < length; i++) {
+                        let str = this.stayCaseData[i].occur_time.substring(0, 10);
+                        if (str === this.time) {
+                            array.push(this.stayCaseData[i]);
+                        }
+                    }
+                    this.stayCaseData = array;
+                } else {
+                    this.$message('请输入要搜索的时间！');
+                }
+            },
+            getTime(val) {
+                this.time = val;
+                if (this.time === null || this.time === '') {
+                    this.stayCaseData = this.stayCase;
+                }
+            },
+            dealCase(row) {
+                //处理案件，将案件状态变为在办案件
+                let qs = require('qs');
+                let instance = axios.create({
+                    headers: {'content-type': 'application/x-www-form-urlencoded'}
+                });
+                let data = qs.stringify({
+                    deal_status: 1
+                });
+                instance.post("http://120.79.137.221:801/api/v1/cases/" + row.id + "/deal/", data)
+                    .then((res) => {
+                        this.closeDetail();
+                        this.$message({
+                            message: "该案件状态更新为在办案件!",
+                            type: 'success'
+                        })
+                    })
+                    .catch((err) => {
+                        this.closeDetail();
+                        this.$message({
+                            message: "案件状态更新失败!",
+                            type: 'error'
+                        })
+                    });
             }
+
         },
-        mounted () {
-            this.load();
+        mounted() {
+            this.stayCaseData = this.stayCase;
         },
         watch: {
-            tableData:function () {
-                for(let i=0;i<this.tableData.length;i++){
-                    if(this.tableData[i].gender==0){
-                        this.tableData[i].gender = '男'
-                    }else {
-                        this.tableData[i].gender = '女'
+            stayCaseData: function () {
+                let length = this.stayCaseData.length;
+                for (let i = 0; i < length; i++) {
+                    this.stayCaseData[i].reporter.gender = this.stayCaseData[i].reporter.gender ? '男' : '女';
+                    if (this.stayCaseData[i].check_status === 0) {
+                        this.stayCaseData[i].check_status = '未审核';
+                    } else if (this.stayCaseData[i].check_status === 1) {
+                        this.stayCaseData[i].check_status = '审核通过';
+                    } else if (this.stayCaseData[i].check_status === 2) {
+                        this.stayCaseData[i].check_status = '审核未通过';
                     }
                 }
             }
+        },
+        computed: {
+            ...mapState({
+                stayCase: state => state.stayCase,
+            })
         }
     }
 </script>
 <style scoped>
-    .el-form-item{
+    .el-form-item {
         color: red;
     }
 </style>

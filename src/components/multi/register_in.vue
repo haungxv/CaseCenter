@@ -70,7 +70,6 @@
 
 <script>
     export default {
-        name: "detailRegister",
         props:['a'],
         data(){
             return {
