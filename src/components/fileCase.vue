@@ -27,7 +27,7 @@
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button @click="showDetail(scope.row)" type="text" size="small">查看详情</el-button>
-                        <el-button @click="download(scope.row)" type="text" size="small">下载详情</el-button>
+                        <!--<el-button @click="download(scope.row)" type="text" size="small">下载详情</el-button>-->
                     </template>
                 </el-table-column>
             </el-table>

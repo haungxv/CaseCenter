@@ -118,6 +118,10 @@
 </template>
 <script>
     import axios from 'axios';
+    import {
+        mapState,
+        mapMutations,
+    } from 'vuex'
 
     export default {
         data() {
@@ -183,9 +187,10 @@
                 let instance = axios.create({
                     headers: {'content-type': 'application/x-www-form-urlencoded'}
                 });
-                instance.get("http://120.79.137.221:801/api/v1/address/")
+                axios.get("http://120.79.137.221:801/api/v1/address/")
                     .then((res) => {
                         this.address1_s = this.getList(res);
+                        this['setLabelPosition'](res.data);
                     })
                     .catch((err) => {
                         this.fail('获取案发地点失败！');
@@ -196,9 +201,10 @@
                 let instance = axios.create({
                     headers: {'content-type': 'application/x-www-form-urlencoded'}
                 });
-                instance.get("http://120.79.137.221:801/api/v1/casetype/")
+                axios.get("http://120.79.137.221:801/api/v1/casetype/")
                     .then((res) => {
                         this.type1_s = this.getList(res);
+                        this['setLabelType'](res.data);
                     })
                     .catch((err) => {
                         this.fail('获取案件类型失败！');
@@ -209,7 +215,7 @@
                 let instance = axios.create({
                     headers: {'content-type': 'application/x-www-form-urlencoded'}
                 });
-                instance.get("http://120.79.137.221:801/api/v1/profession/")
+                axios.get("http://120.79.137.221:801/api/v1/profession/")
                     .then((res) => {
                         let length = res.data.length;
                         let array_1 = [];
@@ -229,6 +235,8 @@
                         }
                         this.inSchools = array_1;
                         this.outSchools = array_2;
+                        this['setLabelProfession_in'](array_1);
+                        this['setLabelProfession_out'](array_2);
                     })
                     .catch((err) => {
                         this.fail('获取职业或身份失败！');
@@ -491,11 +499,22 @@
                     type: 'error'
                 })
             },
+            ...mapMutations(['setLabelProfession_in','setLabelProfession_out','setLabelPosition','setLabelType']),
         },
         mounted: function () {
+            axios.defaults.headers.common['Authorization'] = "JWT "+this.token;
             this.caseType();
             this.casePosition();
             this.profession();
+        },
+        computed:{
+            ...mapState({
+                token: state => state.token,
+                labelType:state=>state.labelType,
+                labelPosition:state=>state.labelPosition,
+                labelProfession_in:state=>state.labelProfession_in,
+                labelProfession_out:state=>state.labelProfession_out,
+            })
         },
         watch: {
             address1: function (val, old) {

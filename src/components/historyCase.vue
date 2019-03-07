@@ -14,7 +14,6 @@
                          :show_property="show_property"
             ></case-dialog>
         </el-dialog>
-        <div style="text-align: left">
             <div style="text-align: left">
                 时间：
                 <el-date-picker v-model="time" type="date" placeholder="请选择日期"></el-date-picker>
@@ -22,7 +21,7 @@
                 <el-input v-model="name" placeholder="请输入查询的报案人姓名" class="searchName"></el-input>
                 <el-button type="success" style="margin: 0 20px" @click="search">搜索</el-button>
             </div>
-        </div>
+
         <div style="margin-top: 50px">
             <el-table :data="historyCaseData" border>
                 <el-table-column label="案件编号" align="center" prop="case_id" width="90"></el-table-column>

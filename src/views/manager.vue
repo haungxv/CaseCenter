@@ -1,13 +1,12 @@
 <template>
     <div class="manager">
         <div class="left">
-            <p style="color: #fff451;font-size: 20px">欢迎你:{{realname}}</p>
-            <p style="color: #ff2217;font-size: 12px;cursor: pointer" @click="exit">退出</p>
+            <div style="color: #fff451;font-size: 20px;margin-top:10px;">欢迎你:{{realname}}</div>
+            <div style="color: #ff2217;font-size: 12px;cursor: pointer;margin-top:10px;" @click="exit">退出</div>
             <el-menu :router="true" class="el-menu-vertical-demo " background-color="#324057" text-color="#fff"
                      active-text-color="#20a0ff"
                      :default-active="activeIndex" :unique-opened="true">
-                <el-menu-item v-if="on_off" index="/manager/caseReview" id="leftClick"><span>案件审核</span>
-                </el-menu-item>
+                <el-menu-item v-if="on_off" index="/manager/caseReview" id="leftClick"><span>案件审核</span></el-menu-item>
                 <el-menu-item index="/manager/caseRegistration"><span>案件登记</span></el-menu-item>
                 <el-menu-item index="/manager/stayCase"><span>待办案件</span></el-menu-item>
                 <el-menu-item index="/manager/workCase"><span>在办案件</span></el-menu-item>
@@ -18,6 +17,7 @@
                 <el-menu-item index="/manager/manageLabel"><span>标签管理</span></el-menu-item>
                 <el-menu-item index="/manager/trackRecord"><span>留痕日志</span></el-menu-item>
                 <el-menu-item index="/manager/caseStatic"><span>案件统计</span></el-menu-item>
+                <el-menu-item index="/manager/weekSummary"><span>每周总结</span></el-menu-item>
                 <el-menu-item index="/manager/suspectBank"><span>嫌疑人库</span></el-menu-item>
             </el-menu>
         </div>
@@ -52,10 +52,15 @@
             getCases() {
                 //获取所有案件
                 let instance = axios.create({
-                    headers: {'content-type': 'application/x-www-form-urlencoded'}
+                    headers: {
+                        'content-type': 'application/x-www-form-urlencoded',
+                        "Authorization": "JWT " + this.token,
+                    }
                 });
                 instance.get("http://120.79.137.221:801/api/v1/cases/")
                     .then((res) => {
+                        console.log(res.data);
+                        this['setAllCases'](res.data);
                         let caseReview_noSee = [],
                             caseReview_yes = [],
                             caseReview_no = [],
@@ -93,8 +98,9 @@
                         this['setFileCase'](fileCase);
                     })
                     .catch((err) => {
-                        this.fail('获取失败！');
+                        this.fail('获取案件失败！');
                     });
+
             },
             success(str) {
                 this.$message({
@@ -108,16 +114,15 @@
                     type: 'error'
                 })
             },
-            ...mapMutations(['setCaseReview_noSee', 'setCaseReview_yes', 'setCaseReview_no', 'setStayCase', 'setWorkCase', 'setHistoryCase', 'setFileCase']),
+            ...mapMutations(['setAllCases', 'setCaseReview_noSee', 'setCaseReview_yes', 'setCaseReview_no', 'setStayCase', 'setWorkCase', 'setHistoryCase', 'setFileCase']),
         },
         computed: {
-            user() {
-                return JSON.parse(sessionStorage.userData)
-            },
+            ...mapState({
+                token: state => state.token,
+            })
         },
         mounted() {
             this.getCases();
-            // document.getElementById("leftClick").click();
         },
     }
 </script>
@@ -135,18 +140,18 @@
         background-color: #324057;
         width: 12.5%;
         height: 100%;
-        overflow: hidden;
         position: fixed;
         left: 0;
         top: 0;
+        z-index: 2;
     }
 
     .right {
         box-sizing: border-box;
         width: 87.5%;
         height: 100%;
-        margin-left:12.5%;
-        padding:50px;
+        margin-left: 12.5%;
+        padding: 50px;
     }
 
     span {

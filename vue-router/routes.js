@@ -14,6 +14,7 @@ import hello from '../src/components/hello.vue'
 import caseStatic from '../src/components/caseStatic.vue'
 import trackRecord from '../src/components/trackRecord.vue'
 import suspectBank from '../src/components/suspectBank.vue'
+import weekSummary from '../src/components/weekSummary.vue'
 
 
 export default [
@@ -80,6 +81,10 @@ export default [
             {
                 path: 'trackRecord',
                 component: trackRecord
+            },
+            {
+                path: 'weekSummary',
+                component: weekSummary
             },
         ]
     },

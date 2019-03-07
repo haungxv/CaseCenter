@@ -183,6 +183,11 @@
                 this.show_property = true;
                 this.dialogVisible = false;
             },
+            handleTime(str) {
+                //处理时间格式
+                let a = str.substring(0, 19);
+                return a.replace("T", ' ');
+            },
         },
         mounted() {
             this.changeReview(0);
@@ -198,13 +203,11 @@
                     } else if (this.caseReviewData[i].check_status === 2) {
                         this.caseReviewData[i].check_status = '审核未通过'
                     }
+                    this.caseReviewData[i].occur_time = this.handleTime(this.caseReviewData[i].occur_time);
                 }
             }
         },
         computed: {
-            user() {
-                return JSON.parse(sessionStorage.userData)
-            },
             ...mapState({
                 caseReview_noSee: state => state.caseReview_noSee,
                 caseReview_yes: state => state.caseReview_yes,

@@ -16,6 +16,12 @@
 </template>
 
 <script>
+    import axios from 'axios';
+    import {
+        mapState,
+        mapMutations,
+    } from 'vuex'
+
     export default {
         name: "sign",
         data() {
@@ -28,8 +34,25 @@
         },
         methods: {
             login() {
-                this.$router.push('/manager')
-            }
+                let qs = require('qs');
+                let instance = axios.create({});
+                let data = {
+                    "username": this.form.username,
+                    "password": this.form.password,
+                };
+                instance.post("http://120.79.137.221:801/token-auth/", data)
+                    .then((res) => {
+                        if (res.status) {
+                            console.log("登陆成功！");
+                            this.$router.push('/manager');
+                            this['setToken'](res.data.token);
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+            },
+            ...mapMutations(['setToken']),
         }
     }
 </script>

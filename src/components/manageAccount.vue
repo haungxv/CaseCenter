@@ -75,6 +75,10 @@
 </template>
 <script>
     import axios from 'axios';
+    import {
+        mapState,
+        mapMutations,
+    } from 'vuex'
 
     export default {
         components: {},
@@ -145,6 +149,7 @@
                 instance.get("http://120.79.137.221:801/api/v1/users/")
                     .then((res) => {
                         this.users = res.data;
+                        this['setUserList'](res.data);
                     })
                     .catch((err) => {
                         this.fail('获取用户列表失败！');
@@ -187,7 +192,22 @@
                 //修改密码
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-
+                        let qs = require('qs');
+                        let instance = axios.create({
+                            headers: {'content-type': 'application/x-www-form-urlencoded'}
+                        });
+                        let data = qs.stringify({
+                            "password": this.PasswordForm.pass,
+                        });
+                        instance.post("http://120.79.137.221:801/api/v1/users/" + this.id + "/reset_pwd/", data)
+                            .then((res) => {
+                                this.passCancel();
+                                this.success('修改密码成功！');
+                            })
+                            .catch((err) => {
+                                this.passCancel();
+                                this.fail('修改密码失败！');
+                            });
                     }
                 })
             },
@@ -208,6 +228,7 @@
                         let data = qs.stringify({
                             "name": this.form.name,
                             "email": this.form.email,
+                            "phone": this.form.phone,
                             "identity_card": this.form.identity_card,
                             "role": this.form.role,
                             "username": this.form.username
@@ -257,10 +278,19 @@
                     type: 'error'
                 })
             },
+            ...mapMutations(['setUserList']),
+        },
+        computed: {
+            ...mapState({
+                token: state => state.token,
+                userList: state => state.userList,
+            })
         },
         mounted() {
+            axios.defaults.headers.common['Authorization'] = "JWT " + this.token;
             this.getAccount();
         },
+
         watch: {
             users: function () {
                 let length = this.users.length;

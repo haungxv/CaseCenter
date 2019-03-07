@@ -91,6 +91,7 @@
                             });
                             let data = qs.stringify({
                                 "name": this.form.name,
+                                "phone":this.form.phone,
                                 "email": this.form.email,
                                 "identity_card": this.form.identity_card,
                                 "role":this.form.role,
