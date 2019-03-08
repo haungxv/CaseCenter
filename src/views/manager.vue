@@ -12,8 +12,10 @@
                 <el-menu-item index="/manager/workCase"><span>在办案件</span></el-menu-item>
                 <el-menu-item index="/manager/historyCase"><span>历史案件</span></el-menu-item>
                 <el-menu-item index="/manager/fileCase"><span>归档案件</span></el-menu-item>
+                <el-menu-item index="/manager/monitorCenter"><span>监控中心</span></el-menu-item>
                 <el-menu-item v-if="on_off" index="/manager/manageAccount"><span>账户管理</span></el-menu-item>
                 <el-menu-item v-if="on_off" index="/manager/addAccount"><span>新增账户</span></el-menu-item>
+                <el-menu-item v-if="on_off" index="/manager/changePass"><span>修改密码</span></el-menu-item>
                 <el-menu-item index="/manager/manageLabel"><span>标签管理</span></el-menu-item>
                 <el-menu-item index="/manager/trackRecord"><span>留痕日志</span></el-menu-item>
                 <el-menu-item index="/manager/caseStatic"><span>案件统计</span></el-menu-item>

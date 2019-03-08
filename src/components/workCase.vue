@@ -13,6 +13,14 @@
                          :show_witness="show_witness"
                          :show_property="show_property"
             ></case-dialog>
+            <div style="text-align: left">
+                审核结果
+                <hr>
+                <el-form :inline="true">
+                    <el-form-item label="审核结果:" style="width: 20%">{{caseDetail.check_status}}</el-form-item>
+                    <el-form-item label="原因:" style="width: 100%">{{caseDetail.pass_reason}}</el-form-item>
+                </el-form>
+            </div>
         </el-dialog>
         <!--处理案件弹出框-->
         <el-dialog title="处理结果" :visible.sync="dialogDispose">
@@ -33,10 +41,10 @@
             <br/>
             <div style="margin-top:40px;">
                 审核状态：
-                <el-radio class="radio" v-model="status" label=0>未审核</el-radio>
-                <el-radio class="radio" v-model="status" label=1>审核通过</el-radio>
-                <el-radio class="radio" v-model="status" label=2>审核未通过</el-radio>
-                <el-radio class="radio" v-model="status" label=3>全部在办案件</el-radio>
+                <el-radio class="radio" v-model="status" label="0">未审核</el-radio>
+                <el-radio class="radio" v-model="status" label="1">审核通过</el-radio>
+                <el-radio class="radio" v-model="status" label="2">审核未通过</el-radio>
+                <el-radio class="radio" v-model="status" label="3">全部在办案件</el-radio>
             </div>
         </div>
         <div style="margin-top: 50px">
@@ -74,6 +82,7 @@
         data() {
             return {
                 dialogVisible: false,//判断弹出框是否展示
+                allData: [],//在办案件列表备份
                 workCaseData: [],//在办案件列表
                 caseDetail: {},//弹出详情弹窗中的内容
                 caseDetailReporter: {},//弹出详情弹窗中的内容--报案人信息
@@ -191,6 +200,34 @@
             }
         },
         methods: {
+            getCases() {
+                //获取所有案件
+                let instance = axios.create({
+                    headers: {
+                        'content-type': 'application/x-www-form-urlencoded',
+                        "Authorization": "JWT " + this.token,
+                    }
+                });
+                instance.get("http://120.79.137.221:801/api/v1/cases/")
+                    .then((res) => {
+                        let workCase = [];
+                        let length = res.data.length;
+                        for (let i = 0; i < length; i++) {
+                            if (res.data[i].deal_status === 1) {
+                                workCase.push(res.data[i])
+                            }
+                        }
+                        this.workCaseData = workCase;
+                        this.allData = workCase;
+                    })
+                    .catch((err) => {
+                        this.$message({
+                            message: "获取在办案件列表失败！",
+                            type: 'error'
+                        })
+                    });
+
+            },
             showDetail(row) {
                 //查看案件详情,判断各个模块是否展示
                 this.dialogVisible = true;
@@ -259,12 +296,17 @@
                     headers: {'content-type': 'application/x-www-form-urlencoded'}
                 });
                 let data = qs.stringify({
-                    deal_status: 1
+                    deal_status: 2,
+                    deal_result: this.result.join('/'),
                 });
                 instance.post("http://120.79.137.221:801/api/v1/cases/" + this.row.id + "/deal/", data)
                     .then((res) => {
+                        this.dialogDispose = false;
+                        this.row = {};
+                        this.result = [];
+                        this.getCases();
                         this.$message({
-                            message:"案件处理成功，案件状态更新为历史案件!",
+                            message: "案件处理成功，案件状态更新为历史案件!",
                             type: 'success'
                         })
                     })
@@ -291,24 +333,27 @@
                 if (this.time === null || this.time === '') {
                     this.$message('请输入要搜索的时间！');
                 } else {
-                    this.time = this.changeTime(this.time);
-                    let array = [];
-                    let length = this.workCaseData.length;
-                    for (let i = 0; i < length; i++) {
-                        let str = this.workCaseData[i].occur_time.substring(0, 10);
-                        if (str === this.time) {
-                            array.push(this.workCaseData[i]);
+                    this.status = '3';
+                    this.workCaseData = this.allData;
+                    this.$nextTick(() => {
+                        this.time = this.changeTime(this.time);
+                        let array = [];
+                        let length = this.workCaseData.length;
+                        for (let i = 0; i < length; i++) {
+                            let str = this.workCaseData[i].occur_time.substring(0, 10);
+                            if (str === this.time) {
+                                array.push(this.workCaseData[i]);
+                            }
                         }
-                    }
-                    this.workCaseData = array;
+                        this.workCaseData = array;
+                    });
                 }
-                this.searchStatus();
             },
             getTime(val) {
                 //如果删除搜索时间，将显示全部列表并且进行审核状态查询
                 this.time = val;
                 if (this.time === null || this.time === '') {
-                    this.workCaseData = this.workCase;
+                    this.workCaseData = this.allData;
                     this.searchStatus();
                 }
             },
@@ -332,17 +377,67 @@
                     this.workCaseData = array;
                 }
             },
+            handleTime(str) {
+                //处理时间格式
+                let a = str.substring(0, 19);
+                return a.replace("T", ' ');
+            },
+            handleEducation(object) {
+                switch (object.education) {
+                    case 1:
+                        object.education = "小学";
+                        break;
+                    case 2:
+                        object.education = "初中";
+                        break;
+                    case 3:
+                        object.education = "高中";
+                        break;
+                    case 4:
+                        object.education = "专科";
+                        break;
+                    case 5:
+                        object.education = "本科";
+                        break;
+                    case 6:
+                        object.education = "硕士";
+                        break;
+                    case 7:
+                        object.education = "博士";
+                        break;
+                    default :
+                        break;
+                }
+            },
+            handleIdentityDocument(object) {
+                switch (object.identity_document) {
+                    case 1:
+                        object.identity_document = "护照";
+                        break;
+                    case 2:
+                        object.identity_document = "学生证";
+                        break;
+                    case 3:
+                        object.identity_document = "身份证";
+                        break;
+                    default :
+                        break;
+                }
+            }
         },
         mounted() {
-            this.workCaseData = this.workCase;
+            axios.defaults.headers.common['Authorization'] = "JWT " + this.token;
+            this.getCases();
         },
         computed: {
             ...mapState({
+                token: state => state.token,
                 workCase: state => state.workCase,
             })
         },
         watch: {
             workCaseData: function () {
+                console.log(this.workCaseData);
                 let length = this.workCaseData.length;
                 for (let i = 0; i < length; i++) {
                     this.workCaseData[i].reporter.gender = this.workCaseData[i].reporter.gender === true ? '男' : '女';
@@ -353,10 +448,33 @@
                     } else if (this.workCaseData[i].check_status === 2) {
                         this.workCaseData[i].check_status = '审核未通过';
                     }
+                    this.workCaseData[i].occur_time = this.handleTime(this.workCaseData[i].occur_time);
+                    // 处理学历表示问题
+                    this.handleEducation(this.workCaseData[i].reporter);
+                    if (this.workCaseData[i].sufferer) {
+                        this.handleEducation(this.workCaseData[i].sufferer);
+                    }
+                    if (this.workCaseData[i].suspect) {
+                        this.handleEducation(this.workCaseData[i].suspect);
+                    }
+                    if (this.workCaseData[i].witness) {
+                        this.handleEducation(this.workCaseData[i].witness);
+                    }
+                    //处理证件类型问题
+                    this.handleIdentityDocument(this.workCaseData[i].reporter);
+                    if (this.workCaseData[i].sufferer) {
+                        this.handleIdentityDocument(this.workCaseData[i].sufferer);
+                    }
+                    if (this.workCaseData[i].suspect) {
+                        this.handleIdentityDocument(this.workCaseData[i].suspect);
+                    }
+                    if (this.workCaseData[i].witness) {
+                        this.handleIdentityDocument(this.workCaseData[i].witness);
+                    }
                 }
             },
             status: function () {
-                this.workCaseData = this.workCase;
+                this.workCaseData = this.allData;
                 this.searchStatus();
                 if (this.time === null || this.time === '') {
                     return;

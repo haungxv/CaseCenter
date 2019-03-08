@@ -15,6 +15,8 @@ import caseStatic from '../src/components/caseStatic.vue'
 import trackRecord from '../src/components/trackRecord.vue'
 import suspectBank from '../src/components/suspectBank.vue'
 import weekSummary from '../src/components/weekSummary.vue'
+import changePass from '../src/components/changePass.vue'
+import monitorCenter from '../src/components/monitorCenter.vue'
 
 
 export default [
@@ -85,6 +87,14 @@ export default [
             {
                 path: 'weekSummary',
                 component: weekSummary
+            },
+            {
+                path: 'changePass',
+                component: changePass
+            },
+            {
+                path: 'monitorCenter',
+                component: monitorCenter
             },
         ]
     },

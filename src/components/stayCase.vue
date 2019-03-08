@@ -13,6 +13,14 @@
                          :show_witness="show_witness"
                          :show_property="show_property"
             ></case-dialog>
+            <div style="text-align: left">
+                审核结果
+                <hr>
+                <el-form :inline="true">
+                    <el-form-item label="审核结果:" style="width: 20%">{{caseDetail.check_status}}</el-form-item>
+                    <el-form-item label="原因:" style="width: 100%">{{caseDetail.pass_reason}}</el-form-item>
+                </el-form>
+            </div>
         </el-dialog>
         <div style="text-align: left">
             时间:
@@ -71,6 +79,32 @@
             }
         },
         methods: {
+            getCases() {
+                //获取所有案件
+                let instance = axios.create({
+                    headers: {
+                        'content-type': 'application/x-www-form-urlencoded',
+                    }
+                });
+                instance.get("http://120.79.137.221:801/api/v1/cases/")
+                    .then((res) => {
+                        let stayCase = [];
+                        let length = res.data.length;
+                        for (let i = 0; i < length; i++) {
+                            if (res.data[i].deal_status === 0) {
+                                stayCase.push(res.data[i])
+                            }
+                        }
+                        this.stayCaseData = stayCase;
+                    })
+                    .catch((err) => {
+                        this.$message({
+                            message: "获取待办案件列表失败！",
+                            type: 'error'
+                        })
+                    });
+
+            },
             showDetail(row) {
                 //查看案件详情,判断各个模块是否展示
                 this.dialogVisible = true;
@@ -138,7 +172,6 @@
                 return str > 9 ? (str) : ("0" + str);
             },
             search() {
-                console.log(this.time);
                 if (this.time !== '' && this.time !== null) {
                     this.time = this.changeTime(this.time);
                     let array = [];
@@ -167,11 +200,12 @@
                     headers: {'content-type': 'application/x-www-form-urlencoded'}
                 });
                 let data = qs.stringify({
-                    deal_status: 1
+                    deal_status: 1,
                 });
                 instance.post("http://120.79.137.221:801/api/v1/cases/" + row.id + "/deal/", data)
                     .then((res) => {
                         this.closeDetail();
+                        this.getCases();
                         this.$message({
                             message: "该案件状态更新为在办案件!",
                             type: 'success'
@@ -184,14 +218,62 @@
                             type: 'error'
                         })
                     });
+            },
+            handleTime(str) {
+                //处理时间格式
+                let a = str.substring(0, 19);
+                return a.replace("T", ' ');
+            },
+            handleEducation(object) {
+                switch (object.education) {
+                    case 1:
+                        object.education = "小学";
+                        break;
+                    case 2:
+                        object.education = "初中";
+                        break;
+                    case 3:
+                        object.education = "高中";
+                        break;
+                    case 4:
+                        object.education = "专科";
+                        break;
+                    case 5:
+                        object.education = "本科";
+                        break;
+                    case 6:
+                        object.education = "硕士";
+                        break;
+                    case 7:
+                        object.education = "博士";
+                        break;
+                    default :
+                        break;
+                }
+            },
+            handleIdentityDocument(object) {
+                switch (object.identity_document) {
+                    case 1:
+                        object.identity_document = "护照";
+                        break;
+                    case 2:
+                        object.identity_document = "学生证";
+                        break;
+                    case 3:
+                        object.identity_document = "身份证";
+                        break;
+                    default :
+                        break;
+                }
             }
-
         },
         mounted() {
-            this.stayCaseData = this.stayCase;
+            axios.defaults.headers.common['Authorization'] = "JWT " + this.token;
+            this.getCases();
         },
         watch: {
             stayCaseData: function () {
+                console.log(this.stayCaseData);
                 let length = this.stayCaseData.length;
                 for (let i = 0; i < length; i++) {
                     this.stayCaseData[i].reporter.gender = this.stayCaseData[i].reporter.gender ? '男' : '女';
@@ -202,12 +284,41 @@
                     } else if (this.stayCaseData[i].check_status === 2) {
                         this.stayCaseData[i].check_status = '审核未通过';
                     }
+                    this.stayCaseData[i].occur_time = this.handleTime(this.stayCaseData[i].occur_time);
+                    //处理学历表示问题
+                    this.handleEducation(this.stayCaseData[i].reporter);
+                    if (this.stayCaseData[i].sufferer) {
+                        this.handleEducation(this.stayCaseData[i].sufferer);
+                    }
+                    if (this.stayCaseData[i].suspect) {
+                        this.handleEducation(this.stayCaseData[i].suspect);
+                    }
+                    if (this.stayCaseData[i].witness) {
+                        this.handleEducation(this.stayCaseData[i].witness);
+                    }
+                    //处理证件类型问题
+                    this.handleIdentityDocument(this.stayCaseData[i].reporter);
+                    if(this.stayCaseData[i].sufferer){
+                        this.handleIdentityDocument(this.stayCaseData[i].sufferer);
+                    }
+                    if(this.stayCaseData[i].suspect){
+                        this.handleIdentityDocument(this.stayCaseData[i].suspect);
+                    }
+                    if(this.stayCaseData[i].witness){
+                        this.handleIdentityDocument(this.stayCaseData[i].witness);
+                    }
                 }
-            }
+            },
+            time: function () {
+                if (this.time === '' || this.time === null) {
+                    this.getCases();
+                }
+            },
         },
         computed: {
             ...mapState({
-                stayCase: state => state.stayCase,
+                token: state => state.token,
+                stayCase: state => state.stayCase
             })
         }
     }

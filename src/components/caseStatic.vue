@@ -1,5 +1,34 @@
 <template>
     <div>
+        <!--案件详情弹出框-->
+        <el-dialog title="案件详情" width="90%" :visible.sync="dialogVisible" :before-close="closeDetail">
+            <case-dialog :caseDetail="caseDetail"
+                         :caseDetailReporter="caseDetailReporter"
+                         :caseDetailSuffer="caseDetailSuffer"
+                         :caseDetailSuspect="caseDetailSuspect"
+                         :caseDetailWitness="caseDetailWitness"
+                         :caseDetailProperty="caseDetailProperty"
+                         :show_suffer="show_suffer"
+                         :show_suspect="show_suspect"
+                         :show_witness="show_witness"
+                         :show_property="show_property"
+            ></case-dialog>
+            <div style="text-align: left">
+                审核结果
+                <hr>
+                <el-form :inline="true">
+                    <el-form-item label="审核结果:" style="width: 20%">{{caseDetail.check_status}}</el-form-item>
+                    <el-form-item label="原因:" style="width: 100%">{{caseDetail.pass_reason}}</el-form-item>
+                </el-form>
+            </div>
+            <div style="text-align: left">
+                处理结果
+                <hr>
+                <el-form :inline="true">
+                    <el-form-item label="处理结果:" style="width: 100%">{{caseDetail.deal_result}}</el-form-item>
+                </el-form>
+            </div>
+        </el-dialog>
         <div style="margin-top:10px;text-align: left">
             学院或单位：
             <el-select v-model="college" placeholder="请选择" style="margin-right:20px;">
@@ -13,18 +42,16 @@
             <el-button type="warning" @click="changeShow(0)">表格形式</el-button>
             <el-button type="success" @click="changeShow(1)">图表形式</el-button>
         </div>
-
-
         <div style="margin-top:30px;text-align: left">{{college}}共有 {{caseLists.length}} 起案件</div>
         <div style="margin-top: 40px" v-if="!show_chart">
             <el-table :data="caseLists" border>
                 <el-table-column label="案件编号" align="center" prop="case_id"></el-table-column>
-                <el-table-column label="报案人姓名" align="center" prop="reporter.name" width="100"></el-table-column>
-                <el-table-column label="联系方式" align="center" prop="reporter.phone" width="160"></el-table-column>
-                <el-table-column label="案件类型" align="center" prop="case_type" width="210"></el-table-column>
-                <el-table-column label="学院或单位" align="center" prop="reporter.work_place" width="230"></el-table-column>
-                <el-table-column label="上报人员" align="center" prop="registrant.name" width="130"></el-table-column>
-                <el-table-column label="操作" align="center" fixed="right" width="130">
+                <el-table-column label="报案人姓名" align="center" prop="reporter.name"></el-table-column>
+                <el-table-column label="联系方式" align="center" prop="reporter.phone"></el-table-column>
+                <el-table-column label="案件类型" align="center" prop="case_type"></el-table-column>
+                <el-table-column label="学院或单位" align="center" prop="reporter.work_place"></el-table-column>
+                <el-table-column label="上报人员" align="center" prop="registrant.name"></el-table-column>
+                <el-table-column label="操作" align="center" fixed="right">
                     <template slot-scope="scope">
                         <el-button @click="showDetail(scope.row)" type="text" size="small">查看详情</el-button>
                     </template>
@@ -39,6 +66,7 @@
 </template>
 
 <script>
+    import caseDialog from './multi/caseDialog.vue'
     import axios from 'axios';
     import {
         mapState,
@@ -55,16 +83,15 @@
     require('echarts/lib/component/title');
     export default {
         name: "caseStatic",
+        components: {caseDialog},
         data() {
             return {
-                college: '',
-                caseLists: [],
-
-                caseType: [],
-                caseTypeNumber: [],
-
-                show_chart: false,
-
+                college: '',//所选择的学院
+                allCases: [],//这一年所有的数据列表备份
+                caseLists: [],//返回这一年的所有数据列表
+                caseType: [],//案件类型数组
+                caseTypeNumber: [],//相应案件类型对应的案件数量
+                show_chart: false,//是否以图表形式展示
                 work_places: [
                     {
                         name: "信息与通信工程学院",
@@ -190,10 +217,47 @@
                         name: "其他",
                         id: 33,
                     },
-                ]
+                    {
+                        name: "全部",
+                        id: 34,
+                    },
+                ],
+
+                dialogVisible: false,//判断弹出框是否展示
+                caseDetail: {},//弹出详情弹窗中的内容
+                caseDetailReporter: {},//弹出详情弹窗中的内容--报案人信息
+                caseDetailSuffer: {},//弹出详情弹窗中的内容--受害人信息
+                caseDetailSuspect: {},//弹出详情弹窗中的内容--嫌疑人信息
+                caseDetailWitness: {},//弹出详情弹窗中的内容--案件证人信息
+                caseDetailProperty: {},//弹出详情弹窗中的内容--财产损失信息
+
+                show_suffer: true,//是否展示受害人信息
+                show_suspect: true,//是否展示嫌疑人信息
+                show_witness: true,//是否展示案件证人信息
+                show_property: true,//是否展示财产损失情况
             }
         },
         methods: {
+            getCases() {
+                //获取所有案件
+                let instance = axios.create({
+                    headers: {
+                        'content-type': 'application/x-www-form-urlencoded',
+                    }
+                });
+                instance.get("http://120.79.137.221:801/api/v1/cases/")
+                    .then((res) => {
+                            this.allCases = res.data;
+                            this.caseLists = res.data;
+                        }
+                    )
+                    .catch((err) => {
+                        this.$message({
+                            message: "获取案件列表失败！",
+                            type: 'error'
+                        })
+                    });
+            },
             drawPie(title, data) {
                 let myChart = echarts.init(document.getElementById('pie'));
                 myChart.setOption({
@@ -227,14 +291,18 @@
                 if (num === 0) {
                     this.show_chart = false;
                 } else if (num === 1) {
-                    this.show_chart = true;
-                    this.$nextTick(function () {
-                        this.drawBar(this.college, this.caseType, this.caseTypeNumber);//柱状图
-                        this.drawPie(this.college, this.organizeArray(this.caseType, this.caseTypeNumber))//饼状图
-                    })
+                    if (this.college === '' || this.college === '全部') {
+                        this.$message('请选择学院或者单位！');
+                    } else {
+                        this.show_chart = true;
+                        this.$nextTick(function () {
+                            this.drawBar(this.college, this.caseType, this.caseTypeNumber);//柱状图
+                            this.drawPie(this.college, this.organizePieArray(this.caseType, this.caseTypeNumber))//饼状图
+                        })
+                    }
                 }
             },
-            organizeArray(arr_1, arr_2) {
+            organizePieArray(arr_1, arr_2) {
                 let length = arr_1.length;
                 let array = [];
                 for (let i = 0; i < length; i++) {
@@ -246,75 +314,225 @@
                 return array;
             },
             showDetail(row) {
+                //查看案件详情,判断各个模块是否展示
+                this.dialogVisible = true;
+                this.caseDetail = row;
+
+                //报案人模块
+                this.caseDetailReporter = row.reporter;
+
+                //判断受害人模块是否展示
+                if (!row.sufferer) {
+                    this.show_suffer = false;
+                } else {
+                    this.caseDetailSuffer = row.sufferer;
+                    this.show_suffer = true;
+                }
+
+                //判断嫌疑人模块是否展示
+                if (!row.suspect) {
+                    this.show_suspect = false;
+                } else {
+                    this.caseDetailSuspect = row.suspect;
+                    this.show_suspect = true;
+                }
+
+                //判断案件证人模块是否展示
+                if (!row.witness) {
+                    this.show_witness = false;
+                } else {
+                    this.caseDetailWitness = row.witness;
+                    this.show_witness = true;
+                }
+
+                //判断财产损失模块是否展示
+                if (!row.property_loss) {
+                    this.show_property = false;
+                } else {
+                    this.caseDetailProperty = row.property_loss;
+                    this.show_property = true;
+                }
             },
-            ...mapMutations(['setUserList']),
+            closeDetail() {
+                //关闭弹框前清空所有数据
+                this.caseDetail = {};
+                this.caseDetailReporter = {};
+                this.caseDetailSuffer = {};
+                this.caseDetailSuspect = {};
+                this.caseDetailWitness = {};
+                this.caseDetailProperty = {};
+                this.show_suffer = true;
+                this.show_suspect = true;
+                this.show_witness = true;
+                this.show_property = true;
+                this.dialogVisible = false;
+            },
+
+            handleTime(str) {
+                //处理时间格式
+                let a = str.substring(0, 19);
+                return a.replace("T", ' ');
+            },
+            handleEducation(object) {
+                switch (object.education) {
+                    case 1:
+                        object.education = "小学";
+                        break;
+                    case 2:
+                        object.education = "初中";
+                        break;
+                    case 3:
+                        object.education = "高中";
+                        break;
+                    case 4:
+                        object.education = "专科";
+                        break;
+                    case 5:
+                        object.education = "本科";
+                        break;
+                    case 6:
+                        object.education = "硕士";
+                        break;
+                    case 7:
+                        object.education = "博士";
+                        break;
+                    default :
+                        break;
+                }
+            },
+            handleIdentityDocument(object) {
+                switch (object.identity_document) {
+                    case 1:
+                        object.identity_document = "护照";
+                        break;
+                    case 2:
+                        object.identity_document = "学生证";
+                        break;
+                    case 3:
+                        object.identity_document = "身份证";
+                        break;
+                    default :
+                        break;
+                }
+            }
         },
         computed: {
             ...mapState({
                 token: state => state.token,
-                allCases: state => state.allCases,
-                userList: state => state.userList,
             })
         },
         mounted() {
             axios.defaults.headers.common['Authorization'] = "JWT " + this.token;
-            this.caseLists = this.allCases;
-
+            this.getCases();
         },
         watch: {
             college: function () {
-                //查找这个学院发生的案件
-                this.caseLists = this.allCases;
-                let length = this.caseLists.length;
-                let array_case = [];
-                for (let i = 0; i < length; i++) {
-                    if (this.college === this.caseLists[i].reporter.work_place) {
-                        array_case.push(this.caseLists[i]);
+                if (this.college === '全部') {
+                    this.caseLists = this.allCases;
+                    this.show_chart = false;
+                } else {
+                    //查找这个学院发生的案件
+                    this.caseLists = this.allCases;
+                    let length = this.caseLists.length;
+                    let array_case = [];
+                    for (let i = 0; i < length; i++) {
+                        if (this.college === this.caseLists[i].reporter.work_place) {
+                            array_case.push(this.caseLists[i]);
+                        }
                     }
-                }
-                // array_case.sort((a, b) => {
-                //     return a.case_type - b.case_type
-                // });
-                this.caseLists = array_case;
-                this.caseLists.sort((a, b) => {
-                    return a.case_type - b.case_type
-                });
+                    this.caseLists = array_case;
+                    this.caseLists.sort((a, b) => {
+                        return a.case_type - b.case_type
+                    });
 
-                //查找案件类型
-                let array_type = [];
-                let length_1 = this.caseLists.length;
-                for (let i = 0; i < length_1; i++) {
-                    array_type.push(this.caseLists[i].case_type);
-                }
-                //为案件类型数组去重
-                array_type.sort();
-                let arrayType = [array_type[0]];
-                for (let i = 1; i < length_1; i++) {
-                    if (array_type[i] !== arrayType[arrayType.length - 1]) {
-                        arrayType.push(array_type[i]);
+                    //查找案件类型
+                    let array_type = [];
+                    let length_1 = this.caseLists.length;
+                    for (let i = 0; i < length_1; i++) {
+                        array_type.push(this.caseLists[i].case_type);
                     }
-                }
-                this.caseType = arrayType;
-                console.log(this.caseType);
-                //查看某类案件在数组中出现了多少次
-                let length_2 = this.caseType.length;
-                let arrayNumber = new Array(length_2);
-                arrayNumber.fill(0);
-                for (let i = 0; i < length_2; i++) {
-                    for (let j = 0; j < length_1; j++) {
-                        if (this.caseType[i] === array_type[j]) {
-                            arrayNumber[i] += 1;
+                    //为案件类型数组去重
+                    array_type.sort();
+                    let arrayType = [array_type[0]];
+                    for (let i = 1; i < length_1; i++) {
+                        if (array_type[i] !== arrayType[arrayType.length - 1]) {
+                            arrayType.push(array_type[i]);
+                        }
+                    }
+                    this.caseType = arrayType;
+                    console.log(this.caseType);
+                    //查看某类案件在数组中出现了多少次
+                    let length_2 = this.caseType.length;
+                    let arrayNumber = new Array(length_2);
+                    arrayNumber.fill(0);
+                    for (let i = 0; i < length_2; i++) {
+                        for (let j = 0; j < length_1; j++) {
+                            if (this.caseType[i] === array_type[j]) {
+                                arrayNumber[i] += 1;
+                            }
+                        }
+                    }
+                    this.caseTypeNumber = arrayNumber;
+                    console.log(this.caseTypeNumber);
+
+                    if (this.show_chart) {
+                        if (this.college === '') {
+                            this.$message('请选择学院或者单位！');
+                        } else {
+                            this.show_chart = true;
+                            this.$nextTick(function () {
+                                this.drawBar(this.college, this.caseType, this.caseTypeNumber);//柱状图
+                                this.drawPie(this.college, this.organizePieArray(this.caseType, this.caseTypeNumber))//饼状图
+                            })
                         }
                     }
                 }
-                this.caseTypeNumber = arrayNumber;
-                console.log(this.caseTypeNumber);
+            },
+            caseLists: function () {
+                let length = this.caseLists.length;
+                for (let i = 0; i < length; i++) {
+                    //处理是待审核，审核通过，还是审核未通过
+                    if (this.caseLists[i].check_status === 0) {
+                        this.caseLists[i].check_status = '待审核'
+                    } else if (this.caseLists[i].check_status === 1) {
+                        this.caseLists[i].check_status = '审核通过'
+                    } else if (this.caseLists[i].check_status === 2) {
+                        this.caseLists[i].check_status = '审核未通过'
+                    }
+                    //处理时间格式
+                    this.caseLists[i].occur_time = this.handleTime(this.caseLists[i].occur_time);
+                    //处理学历表示问题
+                    this.handleEducation(this.caseLists[i].reporter);
+                    if (this.caseLists[i].sufferer) {
+                        this.handleEducation(this.caseLists[i].sufferer);
+                    }
+                    if (this.caseLists[i].suspect) {
+                        this.handleEducation(this.caseLists[i].suspect);
+                    }
+                    if (this.caseLists[i].witness) {
+                        this.handleEducation(this.caseLists[i].witness);
+                    }
+                    //处理证件类型问题
+                    this.handleIdentityDocument(this.caseLists[i].reporter);
+                    if (this.caseLists[i].sufferer) {
+                        this.handleIdentityDocument(this.caseLists[i].sufferer);
+                    }
+                    if (this.caseLists[i].suspect) {
+                        this.handleIdentityDocument(this.caseLists[i].suspect);
+                    }
+                    if (this.caseLists[i].witness) {
+                        this.handleIdentityDocument(this.caseLists[i].witness);
+                    }
+                }
             }
         }
     }
 </script>
 
 <style scoped>
+    .el-form-item {
+        color: red;
+    }
     .chart {
         width: 100%;
         height: 100%;
@@ -332,13 +550,10 @@
     #pie, #bar {
         width: 500px;
         height: 500px;
-        /*border: 1px solid black;*/
         float: left;
         margin-right: 30px;
+        margin-left: 10px;
     }
 
-    /*#bar {*/
-    /*margin-left: 30px;*/
-    /*}*/
 
 </style>

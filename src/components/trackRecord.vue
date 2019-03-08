@@ -2,8 +2,8 @@
     <div>
         <div style="text-align: left">
             时间：
-            <el-date-picker v-model="time" type="date" placeholder="请选择日期"></el-date-picker>
-            报案人姓名：
+            <el-date-picker v-model="time" type="date" placeholder="请选择日期"></el-date-picker>&nbsp;&nbsp;&nbsp;&nbsp;
+            用户名：
             <el-input v-model="name" placeholder="请输入查询的用户名" class="searchName"></el-input>
             <el-button type="success" style="margin: 0 20px" @click="search">搜索</el-button>
         </div>
@@ -36,21 +36,19 @@
         methods: {
             getRecord() {
                 //获取所有账户列表
-                if (this.track.length) {
-                    this.logs = this.track;
-                } else {
-                    let instance = axios.create({
-                        headers: {'content-type': 'application/x-www-form-urlencoded'}
-                    });
-                    instance.get("http://120.79.137.221:801/api/v1/logs/")
-                        .then((res) => {
-                            this.logs = res.data;
-                            this['setTrack'](res.data);
+                let instance = axios.create({
+                    headers: {'content-type': 'application/x-www-form-urlencoded'}
+                });
+                instance.get("http://120.79.137.221:801/api/v1/logs/")
+                    .then((res) => {
+                        this.logs = res.data;
+                    })
+                    .catch((err) => {
+                        this.$message({
+                            message: '获取操作日志失败！',
+                            type: 'error'
                         })
-                        .catch((err) => {
-                            this.fail('获取操作日志失败！');
-                        });
-                }
+                    });
             },
             handleTime(str) {
                 //处理时间格式
@@ -110,7 +108,6 @@
                     }
                 }
             },
-            ...mapMutations(['setTrack']),
         },
         computed: {
             ...mapState({

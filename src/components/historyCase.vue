@@ -13,14 +13,29 @@
                          :show_witness="show_witness"
                          :show_property="show_property"
             ></case-dialog>
-        </el-dialog>
             <div style="text-align: left">
-                时间：
-                <el-date-picker v-model="time" type="date" placeholder="请选择日期"></el-date-picker>
-                报案人姓名：
-                <el-input v-model="name" placeholder="请输入查询的报案人姓名" class="searchName"></el-input>
-                <el-button type="success" style="margin: 0 20px" @click="search">搜索</el-button>
+                审核结果
+                <hr>
+                <el-form :inline="true">
+                    <el-form-item label="审核结果:" style="width: 20%">{{caseDetail.check_status}}</el-form-item>
+                    <el-form-item label="原因:" style="width: 100%">{{caseDetail.pass_reason}}</el-form-item>
+                </el-form>
             </div>
+            <div style="text-align: left">
+                处理结果
+                <hr>
+                <el-form :inline="true">
+                    <el-form-item label="处理结果:" style="width: 100%">{{caseDetail.deal_result}}</el-form-item>
+                </el-form>
+            </div>
+        </el-dialog>
+        <div style="text-align: left">
+            时间：
+            <el-date-picker v-model="time" type="date" placeholder="请选择日期"></el-date-picker>&nbsp;&nbsp;&nbsp;&nbsp;
+            报案人姓名：
+            <el-input v-model="name" placeholder="请输入查询的报案人姓名" class="searchName"></el-input>
+            <el-button type="success" style="margin: 0 20px" @click="search">搜索</el-button>
+        </div>
 
         <div style="margin-top: 50px">
             <el-table :data="historyCaseData" border>
@@ -54,6 +69,7 @@
         data() {
             return {
                 dialogVisible: false,//判断弹出框是否展示
+                allData: [],//历史案件列表备份
                 historyCaseData: [],//历史案件列表
                 caseDetail: {},//弹出详情弹窗中的内容
                 caseDetailReporter: {},//弹出详情弹窗中的内容--报案人信息
@@ -72,6 +88,32 @@
             }
         },
         methods: {
+            getCases() {
+                //获取所有案件
+                let instance = axios.create({
+                    headers: {
+                        "Authorization": "JWT " + this.token,
+                    }
+                });
+                instance.get("http://120.79.137.221:801/api/v1/cases/")
+                    .then((res) => {
+                        let historyCase = [];
+                        let length = res.data.length;
+                        for (let i = 0; i < length; i++) {
+                            if (res.data[i].deal_status === 2) {
+                                historyCase.push(res.data[i])
+                            }
+                        }
+                        this.historyCaseData = historyCase;
+                        this.allData = historyCase;
+
+                    })
+                    .catch((err) => {
+                        this.fail('获取历史案件列表失败！');
+                    });
+
+            },
+
             showDetail(row) {
                 //查看案件详情,判断各个模块是否展示
                 this.dialogVisible = true;
@@ -134,10 +176,11 @@
                     headers: {'content-type': 'application/x-www-form-urlencoded'}
                 });
                 let data = qs.stringify({
-                    deal_status: 3
+                    deal_status: 3,
                 });
                 instance.post("http://120.79.137.221:801/api/v1/cases/" + row.id + "/deal/", data)
                     .then((res) => {
+                        this.getCases();
                         this.$message({
                             message: "该案件状态更新为归档案件!",
                             type: 'success'
@@ -189,7 +232,7 @@
             },
             search() {
                 //判断是根据时间搜索，或者根据姓名搜索，或者都搜索
-                this.historyCaseData = this.historyCase;
+                this.historyCaseData = this.allData;
                 if ((this.time === '' || this.time === null) && this.name === '') {
                     this.$message('请输入要搜索的时间或者报案人姓名！');
                 } else {
@@ -203,12 +246,61 @@
                     }
                 }
             },
+            handleTime(str) {
+                //处理时间格式
+                let a = str.substring(0, 19);
+                return a.replace("T", ' ');
+            },
+            handleEducation(object) {
+                switch (object.education) {
+                    case 1:
+                        object.education = "小学";
+                        break;
+                    case 2:
+                        object.education = "初中";
+                        break;
+                    case 3:
+                        object.education = "高中";
+                        break;
+                    case 4:
+                        object.education = "专科";
+                        break;
+                    case 5:
+                        object.education = "本科";
+                        break;
+                    case 6:
+                        object.education = "硕士";
+                        break;
+                    case 7:
+                        object.education = "博士";
+                        break;
+                    default :
+                        break;
+                }
+            },
+            handleIdentityDocument(object) {
+                switch (object.identity_document) {
+                    case 1:
+                        object.identity_document = "护照";
+                        break;
+                    case 2:
+                        object.identity_document = "学生证";
+                        break;
+                    case 3:
+                        object.identity_document = "身份证";
+                        break;
+                    default :
+                        break;
+                }
+            },
         },
         mounted() {
-            this.historyCaseData = this.historyCase;
+            axios.defaults.headers.common['Authorization'] = "JWT " + this.token;
+            this.getCases();
         },
         computed: {
             ...mapState({
+                token: state => state.token,
                 historyCase: state => state.historyCase,
             })
         },
@@ -217,6 +309,47 @@
                 let length = this.historyCaseData.length;
                 for (let i = 0; i < length; i++) {
                     this.historyCaseData[i].reporter.gender = this.historyCaseData[i].reporter.gender === true ? '男' : '女';
+                    this.historyCaseData[i].occur_time = this.handleTime(this.historyCaseData[i].occur_time);
+                    if (this.historyCaseData[i].check_status === 0) {
+                        this.historyCaseData[i].check_status = '未审核';
+                    } else if (this.historyCaseData[i].check_status === 1) {
+                        this.historyCaseData[i].check_status = '审核通过';
+                    } else if (this.historyCaseData[i].check_status === 2) {
+                        this.historyCaseData[i].check_status = '审核未通过';
+                    }
+                    //处理学历表示问题
+                    this.handleEducation(this.historyCaseData[i].reporter);
+                    if(this.historyCaseData[i].sufferer){
+                        this.handleEducation(this.historyCaseData[i].sufferer);
+                    }
+                    if(this.historyCaseData[i].suspect){
+                        this.handleEducation(this.historyCaseData[i].suspect);
+                    }
+                    if(this.historyCaseData[i].witness){
+                        this.handleEducation(this.historyCaseData[i].witness);
+                    }
+                    //处理证件类型问题
+                    this.handleIdentityDocument(this.historyCaseData[i].reporter);
+                    if(this.historyCaseData[i].sufferer){
+                        this.handleIdentityDocument(this.historyCaseData[i].sufferer);
+                    }
+                    if(this.historyCaseData[i].suspect){
+                        this.handleIdentityDocument(this.historyCaseData[i].suspect);
+                    }
+                    if(this.historyCaseData[i].witness){
+                        this.handleIdentityDocument(this.historyCaseData[i].witness);
+                    }
+                }
+
+            },
+            time: function () {
+                if ((this.time === '' || this.time === null) && this.name === '') {
+                    this.historyCaseData = this.allData;
+                }
+            },
+            name: function () {
+                if ((this.time === '' || this.time === null) && this.name === '') {
+                    this.historyCaseData = this.allData;
                 }
             },
         }

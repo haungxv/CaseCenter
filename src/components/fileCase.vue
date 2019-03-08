@@ -13,6 +13,21 @@
                          :show_witness="show_witness"
                          :show_property="show_property"
             ></case-dialog>
+            <div style="text-align: left">
+                审核结果
+                <hr>
+                <el-form :inline="true">
+                    <el-form-item label="审核结果:" style="width: 20%">{{caseDetail.check_status}}</el-form-item>
+                    <el-form-item label="原因:" style="width: 100%">{{caseDetail.pass_reason}}</el-form-item>
+                </el-form>
+            </div>
+            <div style="text-align: left">
+                处理结果
+                <hr>
+                <el-form :inline="true">
+                    <el-form-item label="处理结果:" style="width: 100%">{{caseDetail.deal_result}}</el-form-item>
+                </el-form>
+            </div>
         </el-dialog>
         <div style="text-align: left">
             报案人姓名:
@@ -47,6 +62,7 @@
         data() {
             return {
                 dialogVisible: false,//判断弹出框是否展示
+                allData: [],//历史列表备份
                 fileCaseData: [],//历史案件列表
                 caseDetail: {},//弹出详情弹窗中的内容
                 caseDetailReporter: {},//弹出详情弹窗中的内容--报案人信息
@@ -64,6 +80,31 @@
             }
         },
         methods: {
+            getCases() {
+                //获取所有案件
+                let instance = axios.create({
+                    headers: {
+                        "Authorization": "JWT " + this.token,
+                    }
+                });
+                instance.get("http://120.79.137.221:801/api/v1/cases/")
+                    .then((res) => {
+                        let fileCase = [];
+                        let length = res.data.length;
+                        for (let i = 0; i < length; i++) {
+                            if (res.data[i].deal_status === 3) {
+                                fileCase.push(res.data[i])
+                            }
+                        }
+                        this.fileCaseData = fileCase;
+                        this.allData = fileCase;
+                    })
+                    .catch((err) => {
+                        this.fail('获取归档案件列表失败！');
+                    });
+
+            },
+
             showDetail(row) {
                 //查看案件详情,判断各个模块是否展示
                 this.dialogVisible = true;
@@ -134,16 +175,104 @@
                     this.fileCaseData = array;
                 }
             },
-            download() {
-
+            handleTime(str) {
+                //处理时间格式
+                let a = str.substring(0, 19);
+                return a.replace("T", ' ');
             },
+            handleEducation(object) {
+                switch (object.education) {
+                    case 1:
+                        object.education = "小学";
+                        break;
+                    case 2:
+                        object.education = "初中";
+                        break;
+                    case 3:
+                        object.education = "高中";
+                        break;
+                    case 4:
+                        object.education = "专科";
+                        break;
+                    case 5:
+                        object.education = "本科";
+                        break;
+                    case 6:
+                        object.education = "硕士";
+                        break;
+                    case 7:
+                        object.education = "博士";
+                        break;
+                    default :
+                        break;
+                }
+            },
+            handleIdentityDocument(object) {
+                switch (object.identity_document) {
+                    case 1:
+                        object.identity_document = "护照";
+                        break;
+                    case 2:
+                        object.identity_document = "学生证";
+                        break;
+                    case 3:
+                        object.identity_document = "身份证";
+                        break;
+                    default :
+                        break;
+                }
+            }
         },
         mounted() {
-            this.fileCaseData = this.fileCase;
+            axios.defaults.headers.common['Authorization'] = "JWT " + this.token;
+            this.getCases();
         },
-        watch: {},
+        watch: {
+            name: function () {
+                if (this.name === '') {
+                    this.fileCaseData = this.allData;
+                }
+            },
+            fileCaseData: function () {
+                let length = this.fileCaseData.length;
+                for (let i = 0; i < length; i++) {
+                    if (this.fileCaseData[i].check_status === 0) {
+                        this.fileCaseData[i].check_status = '未审核';
+                    } else if (this.fileCaseData[i].check_status === 1) {
+                        this.fileCaseData[i].check_status = '审核通过';
+                    } else if (this.fileCaseData[i].check_status === 2) {
+                        this.fileCaseData[i].check_status = '审核未通过';
+                    }
+                    //处理时间格式
+                    this.fileCaseData[i].occur_time = this.handleTime(this.fileCaseData[i].occur_time);
+                    //处理学历表示问题
+                    this.handleEducation(this.fileCaseData[i].reporter);
+                    if(this.fileCaseData[i].sufferer){
+                        this.handleEducation(this.fileCaseData[i].sufferer);
+                    }
+                    if(this.fileCaseData[i].suspect){
+                        this.handleEducation(this.fileCaseData[i].suspect);
+                    }
+                    if(this.fileCaseData[i].witness){
+                        this.handleEducation(this.fileCaseData[i].witness);
+                    }
+                    //处理证件类型问题
+                    this.handleIdentityDocument(this.fileCaseData[i].reporter);
+                    if(this.fileCaseData[i].sufferer){
+                        this.handleIdentityDocument(this.fileCaseData[i].sufferer);
+                    }
+                    if(this.fileCaseData[i].suspect){
+                        this.handleIdentityDocument(this.fileCaseData[i].suspect);
+                    }
+                    if(this.fileCaseData[i].witness){
+                        this.handleIdentityDocument(this.fileCaseData[i].witness);
+                    }
+                }
+            }
+        },
         computed: {
             ...mapState({
+                token: state => state.token,
                 fileCase: state => state.fileCase,
             })
         }

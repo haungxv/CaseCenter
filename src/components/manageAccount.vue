@@ -7,24 +7,7 @@
                 <el-button type="primary" @click="deleteAccount">确 定</el-button>
            </span>
         </el-dialog>
-        <!--修改密码弹出框-->
-        <el-dialog title="修改密码" :visible.sync="dialogVisible_pass" width="600px" :before-close="passCancel">
-            <el-form :model="PasswordForm" :rules="PassRules" ref="PasswordForm" label-position="right"
-                     label-width="60px">
-                <el-form-item label="新密码" prop="pass">
-                    <el-input placeholder="请输入新的密码" v-model="PasswordForm.pass"
-                              type="password"></el-input>
-                </el-form-item>
-                <el-form-item label="新密码" prop="checkPass">
-                    <el-input placeholder="请再次输入新密码" v-model="PasswordForm.checkPass"
-                              type="password"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                     <el-button @click="resetForm('PasswordForm')">重置</el-button>
-                     <el-button type="primary" @click="confirmPass('PasswordForm')">确 定</el-button>
-                </span>
-        </el-dialog>
+
         <!--修改信息弹出框-->
         <el-dialog title="修改信息" :visible.sync="dialogVisible_info" width="620px" :before-close="infoCancel">
             <el-form :model="form" :rules="RulesForm" ref="form" label-position="right" label-width="100px"
@@ -44,11 +27,7 @@
                 <el-form-item label="用户名称：" prop="username">
                     <el-input v-model="form.username"></el-input>
                 </el-form-item>
-                <el-form-item label="权 限">
-                    <el-radio class="radio" v-model="form.role" label=0>治安科工作人员</el-radio>
-                    <el-radio class="radio" v-model="form.role" label=1>治安科助管</el-radio>
-                    <el-radio class="radio" v-model="form.role" label=2>案件中心管理员</el-radio>
-                </el-form-item>
+                <div>用户权限不可更改</div>
             </el-form>
             <span class="dialog-footer">
                 <el-button @click="infoCancel">取 消</el-button>
@@ -57,17 +36,16 @@
         </el-dialog>
 
         <el-table :data="users" border>
-            <el-table-column label="用户名称" align="center" prop="username" width="130"></el-table-column>
-            <el-table-column label="姓名" align="center" prop="name" width="100"></el-table-column>
-            <el-table-column label="电话" align="center" prop="phone" width="150"></el-table-column>
-            <el-table-column label="邮箱" align="center" prop="email" width="170"></el-table-column>
-            <el-table-column label="身份证" align="center" prop="identity_card" width="170"></el-table-column>
-            <el-table-column label="权限" align="center" prop="role" width="170"></el-table-column>
+            <el-table-column label="用户名称" align="center" prop="username"></el-table-column>
+            <el-table-column label="姓名" align="center" prop="name"></el-table-column>
+            <el-table-column label="电话" align="center" prop="phone"></el-table-column>
+            <el-table-column label="邮箱" align="center" prop="email"></el-table-column>
+            <el-table-column label="身份证" align="center" prop="identity_card"></el-table-column>
+            <el-table-column label="权限" align="center" prop="role"></el-table-column>
             <el-table-column fixed="right" align="center" label="操作" width="200">
                 <template slot-scope="scope">
                     <el-button @click="deleteClick(scope.row)" type="text" size="small">删除</el-button>
                     <el-button @click="changeInfo(scope.row)" type="text" size="small">修改信息</el-button>
-                    <el-button @click="changePass(scope.row)" type="text" size="small">修改密码</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -83,45 +61,13 @@
     export default {
         components: {},
         data() {
-            var validatePass = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请输入密码'));
-                } else {
-                    if (this.PasswordForm.checkPass !== '') {
-                        this.$refs.PasswordForm.validateField('checkPass');
-                    }
-                    callback();
-                }
-            };
-            var validatePass2 = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请再次输入密码'));
-                } else if (value !== this.PasswordForm.pass) {
-                    callback(new Error('两次输入密码不一致!'));
-                } else {
-                    callback();
-                }
-            };
             return {
                 users: [],//所有账户列表
-                id: Number,//需要删除，修改信息，修改密码的账户的id
+                id: Number,//需要删除，修改信息的账户的id
 
                 dialogVisible_del: false,//删除用户的确认框是否展示
-                dialogVisible_pass: false,//修改密码的弹出框是否展示
                 dialogVisible_info: false,//修改信息的弹出框是否展示
 
-                PasswordForm: {//修改密码
-                    pass: '',
-                    checkPass: ''
-                },
-                PassRules: {//修改密码验证规则
-                    pass: [
-                        {validator: validatePass, trigger: 'blur'}
-                    ],
-                    checkPass: [
-                        {validator: validatePass2, trigger: 'blur'}
-                    ]
-                },
 
                 form: {//修改信息
                     name: '',
@@ -156,7 +102,7 @@
                     });
             },
             resetForm(formName) {
-                //重置修改密码或者修改信息的表单
+                //重置修改信息的表单
                 this.$refs[formName].resetFields();
             },
 
@@ -183,34 +129,6 @@
                 this.dialogVisible_del = true;
             },
 
-            changePass(row) {
-                //展示修改密码弹出框，并设置id
-                this.id = row.id;
-                this.dialogVisible_pass = true;
-            },
-            confirmPass(formName) {
-                //修改密码
-                this.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        let qs = require('qs');
-                        let instance = axios.create({
-                            headers: {'content-type': 'application/x-www-form-urlencoded'}
-                        });
-                        let data = qs.stringify({
-                            "password": this.PasswordForm.pass,
-                        });
-                        instance.post("http://120.79.137.221:801/api/v1/users/" + this.id + "/reset_pwd/", data)
-                            .then((res) => {
-                                this.passCancel();
-                                this.success('修改密码成功！');
-                            })
-                            .catch((err) => {
-                                this.passCancel();
-                                this.fail('修改密码失败！');
-                            });
-                    }
-                })
-            },
 
             changeInfo(row) {
                 //展示修改信息弹出框，并设置id
@@ -259,12 +177,7 @@
                 this.dialogVisible_info = false;
                 this.id = Number;
             },
-            passCancel() {
-                //重置表单，关闭修改密码弹窗
-                this.resetForm('PasswordForm');
-                this.dialogVisible_pass = false;
-                this.id = Number;
-            },
+
 
             success(str) {
                 this.$message({

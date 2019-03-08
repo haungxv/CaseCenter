@@ -1,7 +1,7 @@
 export default {
-    setAllCases(state,val){
+    setAllCases(state, val) {
         //设置所有案件
-        state.allCases=val;
+        state.allCases = val;
     },
     setToken(state, val) {
         //设置token
@@ -59,4 +59,8 @@ export default {
         //设置标签--职业或者身份
         state.labelType = val;
     },
+    setSuspect(state, val) {
+        //设置嫌疑人库
+        state.suspectList = val;
+    }
 }
