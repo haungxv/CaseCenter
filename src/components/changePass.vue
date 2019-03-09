@@ -1,12 +1,13 @@
 <template>
     <div>
-        <el-form :model="PasswordForm" :rules="PassRules" ref="PasswordForm" label-position="right"
-                 label-width="60px">
+        <h3 style="text-align: left">修改密码</h3>
+        <hr>
+        <el-form :model="PasswordForm" :rules="PassRules" ref="PasswordForm"  label-position="right" label-width="100px"
+                 style="width:500px; margin: 70px auto">
             <el-form-item label="新密码" prop="pass">
-                <el-input placeholder="请输入新的密码" v-model="PasswordForm.pass"
-                          type="password"></el-input>
+                <el-input placeholder="请输入新的密码" v-model="PasswordForm.pass" type="password"></el-input>
             </el-form-item>
-            <el-form-item label="新密码" prop="checkPass">
+            <el-form-item label="确认密码" prop="checkPass">
                 <el-input placeholder="请再次输入新密码" v-model="PasswordForm.checkPass"
                           type="password"></el-input>
             </el-form-item>

@@ -155,6 +155,17 @@
             },
             showDetail(row) {
                 //查看案件详情,判断各个模块是否展示
+                this.caseDetail = {};
+                this.caseDetailReporter = {};
+                this.caseDetailSuffer = {};
+                this.caseDetailSuspect = {};
+                this.caseDetailWitness = {};
+                this.caseDetailProperty = {};
+                this.show_suffer = true;
+                this.show_suspect = true;
+                this.show_witness = true;
+                this.show_property = true;
+
                 this.dialogVisible = true;
                 this.caseDetail = row;
 
@@ -231,22 +242,14 @@
             },
             closeDetail() {
                 //关闭弹框前清空所有数据
-                this.caseDetail = {};
-                this.caseDetailReporter = {};
-                this.caseDetailSuffer = {};
-                this.caseDetailSuspect = {};
-                this.caseDetailWitness = {};
-                this.caseDetailProperty = {};
-                this.show_suffer = true;
-                this.show_suspect = true;
-                this.show_witness = true;
-                this.show_property = true;
                 this.dialogVisible = false;
             },
             handleTime(str) {
                 //处理时间格式
-                let a = str.substring(0, 19);
-                return a.replace("T", ' ');
+                if(str){
+                    let a = str.substring(0, 19);
+                    return a.replace("T", ' ');
+                }
             },
             handleEducation(object) {
                 switch (object.education) {
@@ -314,24 +317,24 @@
                     this.caseReviewData[i].occur_time = this.handleTime(this.caseReviewData[i].occur_time);
                     //处理学历表示问题
                     this.handleEducation(this.caseReviewData[i].reporter);
-                    if(this.caseReviewData[i].sufferer){
+                    if (this.caseReviewData[i].sufferer) {
                         this.handleEducation(this.caseReviewData[i].sufferer);
                     }
-                    if(this.caseReviewData[i].suspect){
+                    if (this.caseReviewData[i].suspect) {
                         this.handleEducation(this.caseReviewData[i].suspect);
                     }
-                    if(this.caseReviewData[i].witness){
+                    if (this.caseReviewData[i].witness) {
                         this.handleEducation(this.caseReviewData[i].witness);
                     }
                     //处理证件类型问题
                     this.handleIdentityDocument(this.caseReviewData[i].reporter);
-                    if(this.caseReviewData[i].sufferer){
+                    if (this.caseReviewData[i].sufferer) {
                         this.handleIdentityDocument(this.caseReviewData[i].sufferer);
                     }
-                    if(this.caseReviewData[i].suspect){
+                    if (this.caseReviewData[i].suspect) {
                         this.handleIdentityDocument(this.caseReviewData[i].suspect);
                     }
-                    if(this.caseReviewData[i].witness){
+                    if (this.caseReviewData[i].witness) {
                         this.handleIdentityDocument(this.caseReviewData[i].witness);
                     }
                 }

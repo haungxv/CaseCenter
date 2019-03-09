@@ -230,6 +230,17 @@
             },
             showDetail(row) {
                 //查看案件详情,判断各个模块是否展示
+                this.caseDetail = {};
+                this.caseDetailReporter = {};
+                this.caseDetailSuffer = {};
+                this.caseDetailSuspect = {};
+                this.caseDetailWitness = {};
+                this.caseDetailProperty = {};
+                this.show_suffer = true;
+                this.show_suspect = true;
+                this.show_witness = true;
+                this.show_property = true;
+
                 this.dialogVisible = true;
                 this.caseDetail = row;
 
@@ -270,22 +281,12 @@
             },
             closeDetail() {
                 //关闭弹框前清空所有数据
-                this.caseDetail = {};
-                this.caseDetailReporter = {};
-                this.caseDetailSuffer = {};
-                this.caseDetailSuspect = {};
-                this.caseDetailWitness = {};
-                this.caseDetailProperty = {};
-                this.row = {};
-                this.show_suffer = true;
-                this.show_suspect = true;
-                this.show_witness = true;
-                this.show_property = true;
                 this.dialogVisible = false;
             },
 
             dealCase(row) {
                 //弹出处理案件的弹出框
+                this.row = {};
                 this.dialogDispose = true;
                 this.row = row;
             },
@@ -320,10 +321,11 @@
 
             changeTime(time) {
                 //将中国标准时间转换为年-月-日格式
-                let year = time.getFullYear();
-                let month = time.getMonth() + 1;
-                let day = time.getDate();
-                return year + "-" + this.formTime(month) + "-" + this.formTime(day);
+                    let year = time.getFullYear();
+                    let month = time.getMonth() + 1;
+                    let day = time.getDate();
+                    return year + "-" + this.formTime(month) + "-" + this.formTime(day);
+
             },
             formTime(str) {
                 //规范分钟和秒的格式
@@ -379,8 +381,10 @@
             },
             handleTime(str) {
                 //处理时间格式
-                let a = str.substring(0, 19);
-                return a.replace("T", ' ');
+                if(str){
+                    let a = str.substring(0, 19);
+                    return a.replace("T", ' ');
+                }
             },
             handleEducation(object) {
                 switch (object.education) {
@@ -437,7 +441,6 @@
         },
         watch: {
             workCaseData: function () {
-                console.log(this.workCaseData);
                 let length = this.workCaseData.length;
                 for (let i = 0; i < length; i++) {
                     this.workCaseData[i].reporter.gender = this.workCaseData[i].reporter.gender === true ? '男' : '女';

@@ -37,12 +37,11 @@
         <div style="margin-top: 50px">
             <el-table :data="fileCaseData" border>
                 <el-table-column label="案件编号" align="center" prop="case_id"></el-table-column>
-                <el-table-column label="归档时间" align="center" prop="occur_time"></el-table-column>
+                <el-table-column label="归档时间" align="center" prop="filing_time"></el-table-column>
                 <el-table-column label="报案人" align="center" prop="reporter.name"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button @click="showDetail(scope.row)" type="text" size="small">查看详情</el-button>
-                        <!--<el-button @click="download(scope.row)" type="text" size="small">下载详情</el-button>-->
                     </template>
                 </el-table-column>
             </el-table>
@@ -107,6 +106,13 @@
 
             showDetail(row) {
                 //查看案件详情,判断各个模块是否展示
+                this.caseDetail = {};
+                this.caseDetailReporter = {};
+                this.caseDetailSuffer = {};
+                this.caseDetailSuspect = {};
+                this.caseDetailWitness = {};
+                this.caseDetailProperty = {};
+
                 this.dialogVisible = true;
                 this.caseDetail = row;
 
@@ -147,16 +153,6 @@
             },
             closeDetail() {
                 //关闭弹框前清空所有数据
-                this.caseDetail = {};
-                this.caseDetailReporter = {};
-                this.caseDetailSuffer = {};
-                this.caseDetailSuspect = {};
-                this.caseDetailWitness = {};
-                this.caseDetailProperty = {};
-                this.show_suffer = true;
-                this.show_suspect = true;
-                this.show_witness = true;
-                this.show_property = true;
                 this.dialogVisible = false;
             },
             searchName() {
@@ -177,8 +173,10 @@
             },
             handleTime(str) {
                 //处理时间格式
-                let a = str.substring(0, 19);
-                return a.replace("T", ' ');
+                if(str){
+                    let a = str.substring(0, 19);
+                    return a.replace("T", ' ');
+                }
             },
             handleEducation(object) {
                 switch (object.education) {
@@ -244,27 +242,27 @@
                         this.fileCaseData[i].check_status = '审核未通过';
                     }
                     //处理时间格式
-                    this.fileCaseData[i].occur_time = this.handleTime(this.fileCaseData[i].occur_time);
+                    this.fileCaseData[i].filing_time = this.handleTime(this.fileCaseData[i].filing_time);
                     //处理学历表示问题
                     this.handleEducation(this.fileCaseData[i].reporter);
-                    if(this.fileCaseData[i].sufferer){
+                    if (this.fileCaseData[i].sufferer) {
                         this.handleEducation(this.fileCaseData[i].sufferer);
                     }
-                    if(this.fileCaseData[i].suspect){
+                    if (this.fileCaseData[i].suspect) {
                         this.handleEducation(this.fileCaseData[i].suspect);
                     }
-                    if(this.fileCaseData[i].witness){
+                    if (this.fileCaseData[i].witness) {
                         this.handleEducation(this.fileCaseData[i].witness);
                     }
                     //处理证件类型问题
                     this.handleIdentityDocument(this.fileCaseData[i].reporter);
-                    if(this.fileCaseData[i].sufferer){
+                    if (this.fileCaseData[i].sufferer) {
                         this.handleIdentityDocument(this.fileCaseData[i].sufferer);
                     }
-                    if(this.fileCaseData[i].suspect){
+                    if (this.fileCaseData[i].suspect) {
                         this.handleIdentityDocument(this.fileCaseData[i].suspect);
                     }
-                    if(this.fileCaseData[i].witness){
+                    if (this.fileCaseData[i].witness) {
                         this.handleIdentityDocument(this.fileCaseData[i].witness);
                     }
                 }

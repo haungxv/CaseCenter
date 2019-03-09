@@ -35,24 +35,26 @@
         methods: {
             login() {
                 let qs = require('qs');
-                let instance = axios.create({});
-                let data = {
+                let instance = axios.create({
+                    headers: {'content-type': 'application/x-www-form-urlencoded'}
+                });
+                let data = qs.stringify({
                     "username": this.form.username,
                     "password": this.form.password,
-                };
+                });
                 instance.post("http://120.79.137.221:801/token-auth/", data)
                     .then((res) => {
                         if (res.status) {
-                            console.log("登陆成功！");
-                            this.$router.push('/manager');
+                            this.$router.push('/manager/caseReview');
                             this['setToken'](res.data.token);
+                            this['setRole'](res.data.role);
                         }
                     })
                     .catch((err) => {
                         console.log(err)
                     })
             },
-            ...mapMutations(['setToken']),
+            ...mapMutations(['setToken','setRole']),
         }
     }
 </script>

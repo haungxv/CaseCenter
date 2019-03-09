@@ -15,4 +15,5 @@ export default {
     labelProfession_out: [],//标签管理--职业或者身份
     labelType: [],//标签管理--案件类型
     suspectList: [],
+    role:'',
 }

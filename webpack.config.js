@@ -83,12 +83,12 @@ if (isDev) {
     );
 } else {
     config.entry = {
-        app: path.join(__dirname, 'src/index.js'),
+        app: path.join(__dirname, 'index.js'),
     };
     config.output = {
         filename: '[name].[chunkhash:8].js',
-        path: path.join(__dirname, 'Blog'),
-        // publicPath: 'http://47.100.48.121:82/'
+        path: path.join(__dirname, 'caseCenter'),
+        // publicPath: 'http://47.100.48.121:82/caseCenter/'
     };
     config.module.rules.push({
         test: /\.css$/,
@@ -108,6 +108,10 @@ if (isDev) {
             // chunkFilename: "[id].css"
         }),
     );
+    config.externals={
+        'vue':'Vue',
+        'element-ui':'ELEMENT'
+    };
     config.optimization = {
         splitChunks: {
             chunks: 'all'

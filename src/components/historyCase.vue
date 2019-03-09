@@ -116,6 +116,13 @@
 
             showDetail(row) {
                 //查看案件详情,判断各个模块是否展示
+                this.caseDetail = {};
+                this.caseDetailReporter = {};
+                this.caseDetailSuffer = {};
+                this.caseDetailSuspect = {};
+                this.caseDetailWitness = {};
+                this.caseDetailProperty = {};
+
                 this.dialogVisible = true;
                 this.caseDetail = row;
 
@@ -156,28 +163,21 @@
             },
             closeDetail() {
                 //关闭弹框前清空所有数据
-                this.caseDetail = {};
-                this.caseDetailReporter = {};
-                this.caseDetailSuffer = {};
-                this.caseDetailSuspect = {};
-                this.caseDetailWitness = {};
-                this.caseDetailProperty = {};
-                this.show_suffer = true;
-                this.show_suspect = true;
-                this.show_witness = true;
-                this.show_property = true;
                 this.dialogVisible = false;
             },
 
             dealCase(row) {
                 //处理案件，将案件状态变为归档案件
+                let time = new Date();
                 let qs = require('qs');
                 let instance = axios.create({
                     headers: {'content-type': 'application/x-www-form-urlencoded'}
                 });
                 let data = qs.stringify({
-                    deal_status: 3,
-                });
+                        deal_status: 3,
+                        filing_time: time
+                    })
+                ;
                 instance.post("http://120.79.137.221:801/api/v1/cases/" + row.id + "/deal/", data)
                     .then((res) => {
                         this.getCases();
@@ -248,8 +248,10 @@
             },
             handleTime(str) {
                 //处理时间格式
-                let a = str.substring(0, 19);
-                return a.replace("T", ' ');
+                if (str) {
+                    let a = str.substring(0, 19);
+                    return a.replace("T", ' ');
+                }
             },
             handleEducation(object) {
                 switch (object.education) {
@@ -319,24 +321,24 @@
                     }
                     //处理学历表示问题
                     this.handleEducation(this.historyCaseData[i].reporter);
-                    if(this.historyCaseData[i].sufferer){
+                    if (this.historyCaseData[i].sufferer) {
                         this.handleEducation(this.historyCaseData[i].sufferer);
                     }
-                    if(this.historyCaseData[i].suspect){
+                    if (this.historyCaseData[i].suspect) {
                         this.handleEducation(this.historyCaseData[i].suspect);
                     }
-                    if(this.historyCaseData[i].witness){
+                    if (this.historyCaseData[i].witness) {
                         this.handleEducation(this.historyCaseData[i].witness);
                     }
                     //处理证件类型问题
                     this.handleIdentityDocument(this.historyCaseData[i].reporter);
-                    if(this.historyCaseData[i].sufferer){
+                    if (this.historyCaseData[i].sufferer) {
                         this.handleIdentityDocument(this.historyCaseData[i].sufferer);
                     }
-                    if(this.historyCaseData[i].suspect){
+                    if (this.historyCaseData[i].suspect) {
                         this.handleIdentityDocument(this.historyCaseData[i].suspect);
                     }
-                    if(this.historyCaseData[i].witness){
+                    if (this.historyCaseData[i].witness) {
                         this.handleIdentityDocument(this.historyCaseData[i].witness);
                     }
                 }

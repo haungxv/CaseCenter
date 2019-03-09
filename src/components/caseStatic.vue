@@ -42,8 +42,14 @@
             <el-button type="warning" @click="changeShow(0)">表格形式</el-button>
             <el-button type="success" @click="changeShow(1)">图表形式</el-button>
         </div>
-        <div style="margin-top:30px;text-align: left">{{college}}共有 {{caseLists.length}} 起案件</div>
+        <div style="margin-top:25px;text-align: left" class="excel">
+            <div style="float:left;margin-top:10px;">{{college}}共有 {{caseLists.length}} 起案件</div>
+            <div style="float:right;margin-right:30px;">
+                <el-button type="message" @click="tableExcel">导出Excel</el-button>
+            </div>
+        </div>
         <div style="margin-top: 40px" v-if="!show_chart">
+
             <el-table :data="caseLists" border>
                 <el-table-column label="案件编号" align="center" prop="case_id"></el-table-column>
                 <el-table-column label="报案人姓名" align="center" prop="reporter.name"></el-table-column>
@@ -235,6 +241,8 @@
                 show_suspect: true,//是否展示嫌疑人信息
                 show_witness: true,//是否展示案件证人信息
                 show_property: true,//是否展示财产损失情况
+
+                jsonData: [],//导出excel时的
             }
         },
         methods: {
@@ -315,6 +323,13 @@
             },
             showDetail(row) {
                 //查看案件详情,判断各个模块是否展示
+                this.caseDetail = {};
+                this.caseDetailReporter = {};
+                this.caseDetailSuffer = {};
+                this.caseDetailSuspect = {};
+                this.caseDetailWitness = {};
+                this.caseDetailProperty = {};
+
                 this.dialogVisible = true;
                 this.caseDetail = row;
 
@@ -355,23 +370,53 @@
             },
             closeDetail() {
                 //关闭弹框前清空所有数据
-                this.caseDetail = {};
-                this.caseDetailReporter = {};
-                this.caseDetailSuffer = {};
-                this.caseDetailSuspect = {};
-                this.caseDetailWitness = {};
-                this.caseDetailProperty = {};
-                this.show_suffer = true;
-                this.show_suspect = true;
-                this.show_witness = true;
-                this.show_property = true;
                 this.dialogVisible = false;
             },
-
+            handleJsonTable() {
+                let length=this.caseLists.length;
+                this.jsonData.push({
+                    case_id:"案件编号",
+                    name:"报案人姓名",
+                    phone:"电话",
+                    case_type:"案件类型",
+                    work_place:"学院或单位",
+                    registrant:"登记人"
+                });
+                for(let i=0;i<length;i++){
+                    this.jsonData.push({
+                        case_id:this.caseLists[i].case_id,
+                        name:this.caseLists[i].reporter.name,
+                        phone:this.caseLists[i].reporter.phone,
+                        case_type:this.caseLists[i].case_type,
+                        work_place:this.caseLists[i].reporter.work_place,
+                        registrant:this.caseLists[i].registrant.name
+                    })
+                }
+            },
+            tableExcel() {
+                this.handleJsonTable();
+                let str = ``;
+                let length = this.jsonData.length;
+                for (let i = 0; i < length; i++) {
+                    for (let item in this.jsonData[i]) {
+                        str += `${this.jsonData[i][item] + '\t'},`;
+                    }
+                    str += '\n';
+                }
+                let uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(str);
+                let link = document.createElement("a");
+                link.href = uri;
+                link.download = "案件统计.csv";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            },
             handleTime(str) {
                 //处理时间格式
-                let a = str.substring(0, 19);
-                return a.replace("T", ' ');
+                if(str){
+                    let a = str.substring(0, 19);
+                    return a.replace("T", ' ');
+                }
             },
             handleEducation(object) {
                 switch (object.education) {
@@ -533,6 +578,7 @@
     .el-form-item {
         color: red;
     }
+
     .chart {
         width: 100%;
         height: 100%;
@@ -553,6 +599,12 @@
         float: left;
         margin-right: 30px;
         margin-left: 10px;
+    }
+
+    .excel:after {
+        clear: both;
+        content: '';
+        display: block;
     }
 
 

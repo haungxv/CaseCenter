@@ -62,5 +62,9 @@ export default {
     setSuspect(state, val) {
         //设置嫌疑人库
         state.suspectList = val;
+    },
+    setRole(state, val) {
+        //设置身份类别
+        state.role = val;
     }
 }
