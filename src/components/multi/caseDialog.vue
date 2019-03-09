@@ -49,7 +49,6 @@
                 <el-form-item label="品牌:" style="width: 18.5%">{{caseDetailProperty.brand}}</el-form-item>
                 <el-form-item label="型号:" style="width: 18.5%">{{caseDetailProperty.version}}</el-form-item>
                 <el-form-item label="颜色:" style="width: 18.5%">{{caseDetailProperty.color}}</el-form-item>
-                <el-form-item label="尺寸:" style="width: 18.5%">{{caseDetailProperty.size}}</el-form-item>
                 <el-form-item label="其他特征:" style="width: 18.5%">{{caseDetailProperty.other_feature}}</el-form-item>
                 <el-form-item label="数量:" style="width: 18.5%">{{caseDetailProperty.sum}}</el-form-item>
                 <el-form-item label="购买时间:" style="width: 18.5%">{{caseDetailProperty.bought_time}}</el-form-item>

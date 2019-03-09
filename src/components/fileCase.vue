@@ -31,7 +31,7 @@
         </el-dialog>
         <div style="text-align: left">
             报案人姓名:
-            <el-input v-model="name" style="width: 20%"></el-input>
+            <el-input v-model="name" style="width: 20%;margin-right:5px;"></el-input>
             <el-button type="success" @click="searchName">查询</el-button>
         </div>
         <div style="margin-top: 50px">
@@ -157,7 +157,7 @@
             },
             searchName() {
                 //根据姓名搜索
-                this.fileCaseData = this.fileCase;
+                this.fileCaseData = this.allData;
                 if (this.name === '') {
                     this.$message('请输入要搜索的报案人姓名！');
                 } else {
@@ -180,25 +180,25 @@
             },
             handleEducation(object) {
                 switch (object.education) {
-                    case 1:
+                    case 0:
                         object.education = "小学";
                         break;
-                    case 2:
+                    case 1:
                         object.education = "初中";
                         break;
-                    case 3:
+                    case 2:
                         object.education = "高中";
                         break;
-                    case 4:
+                    case 3:
                         object.education = "专科";
                         break;
-                    case 5:
+                    case 4:
                         object.education = "本科";
                         break;
-                    case 6:
+                    case 5:
                         object.education = "硕士";
                         break;
-                    case 7:
+                    case 6:
                         object.education = "博士";
                         break;
                     default :
@@ -207,13 +207,13 @@
             },
             handleIdentityDocument(object) {
                 switch (object.identity_document) {
-                    case 1:
+                    case 0:
                         object.identity_document = "护照";
                         break;
-                    case 2:
+                    case 1:
                         object.identity_document = "学生证";
                         break;
-                    case 3:
+                    case 2:
                         object.identity_document = "身份证";
                         break;
                     default :
@@ -271,7 +271,6 @@
         computed: {
             ...mapState({
                 token: state => state.token,
-                fileCase: state => state.fileCase,
             })
         }
     }

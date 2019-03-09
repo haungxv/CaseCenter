@@ -44,12 +44,11 @@
         </div>
         <div style="margin-top:25px;text-align: left" class="excel">
             <div style="float:left;margin-top:10px;">{{college}}共有 {{caseLists.length}} 起案件</div>
-            <div style="float:right;margin-right:30px;">
+            <div style="float:right;margin-right:30px;" v-if="!show_chart">
                 <el-button type="message" @click="tableExcel">导出Excel</el-button>
             </div>
         </div>
         <div style="margin-top: 40px" v-if="!show_chart">
-
             <el-table :data="caseLists" border>
                 <el-table-column label="案件编号" align="center" prop="case_id"></el-table-column>
                 <el-table-column label="报案人姓名" align="center" prop="reporter.name"></el-table-column>
@@ -420,25 +419,25 @@
             },
             handleEducation(object) {
                 switch (object.education) {
-                    case 1:
+                    case 0:
                         object.education = "小学";
                         break;
-                    case 2:
+                    case 1:
                         object.education = "初中";
                         break;
-                    case 3:
+                    case 2:
                         object.education = "高中";
                         break;
-                    case 4:
+                    case 3:
                         object.education = "专科";
                         break;
-                    case 5:
+                    case 4:
                         object.education = "本科";
                         break;
-                    case 6:
+                    case 5:
                         object.education = "硕士";
                         break;
-                    case 7:
+                    case 6:
                         object.education = "博士";
                         break;
                     default :
@@ -447,13 +446,13 @@
             },
             handleIdentityDocument(object) {
                 switch (object.identity_document) {
-                    case 1:
+                    case 0:
                         object.identity_document = "护照";
                         break;
-                    case 2:
+                    case 1:
                         object.identity_document = "学生证";
                         break;
-                    case 3:
+                    case 2:
                         object.identity_document = "身份证";
                         break;
                     default :

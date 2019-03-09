@@ -28,7 +28,8 @@
         name: "trackRecord",
         data() {
             return {
-                logs: [],
+                allData: [],//留痕日志备份
+                logs: [],//留痕日志
                 time: '',
                 name: '',
             }
@@ -41,6 +42,7 @@
                 });
                 instance.get("http://120.79.137.221:801/api/v1/logs/")
                     .then((res) => {
+                        this.allData = res.data;
                         this.logs = res.data;
                     })
                     .catch((err) => {
@@ -55,13 +57,16 @@
                 let a = str.substring(0, 19);
                 return a.replace("T", ' ');
             },
-
             changeTime(time) {
                 //将中国标准时间转换为年-月-日格式
-                let year = time.getFullYear();
-                let month = time.getMonth() + 1;
-                let day = time.getDate();
-                return year + "-" + this.formTime(month) + "-" + this.formTime(day);
+                if (time.getFullYear) {
+                    let year = time.getFullYear();
+                    let month = time.getMonth() + 1;
+                    let day = time.getDate();
+                    return year + "-" + this.formTime(month) + "-" + this.formTime(day);
+                } else {
+                    return time;
+                }
             },
             formTime(str) {
                 //规范分钟和秒的格式
@@ -94,7 +99,7 @@
             },
             search() {
                 //判断是根据时间搜索，或者根据用户名搜索，或者都搜索
-                this.logs = this.track;
+                this.logs = this.allData;
                 if ((this.time === '' || this.time === null) && this.name === '') {
                     this.$message('请输入要搜索的时间或者用户名！');
                 } else {
@@ -127,13 +132,13 @@
                 }
             },
             time: function () {
-                if (this.time === '' || this.time === null) {
-                    this.logs = this.track;
+                if ((this.time === '' || this.time === null) && this.name === '') {
+                    this.logs = this.allData;
                 }
             },
             name: function () {
-                if (this.name === '') {
-                    this.logs = this.track;
+                if ((this.time === '' || this.time === null) && this.name === '') {
+                    this.logs = this.allData;
                 }
             },
         }

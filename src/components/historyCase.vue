@@ -39,13 +39,13 @@
 
         <div style="margin-top: 50px">
             <el-table :data="historyCaseData" border>
-                <el-table-column label="案件编号" align="center" prop="case_id" width="90"></el-table-column>
+                <el-table-column label="案件编号" align="center" prop="case_id" width="200"></el-table-column>
                 <el-table-column label="报案人姓名" align="center" prop="reporter.name" width="150"></el-table-column>
                 <el-table-column label="性别" align="center" prop="reporter.gender"></el-table-column>
                 <el-table-column label="年龄" align="center" prop="reporter.age"></el-table-column>
                 <el-table-column label="联系方式" align="center" prop="reporter.phone" width="150"></el-table-column>
                 <el-table-column label="报案时间" align="center" prop="occur_time" width="180"></el-table-column>
-                <el-table-column label="案件类型" align="center" prop="case_type" width="220"></el-table-column>
+                <el-table-column label="案件类型" align="center" prop="case_type" width="150"></el-table-column>
                 <el-table-column label="操作" align="center" fixed="right" width="150">
                     <template slot-scope="scope">
                         <el-button @click="showDetail(scope.row)" type="text" size="small">查看详情</el-button>
@@ -196,10 +196,14 @@
 
             changeTime(time) {
                 //将中国标准时间转换为年-月-日格式
-                let year = time.getFullYear();
-                let month = time.getMonth() + 1;
-                let day = time.getDate();
-                return year + "-" + this.formTime(month) + "-" + this.formTime(day);
+                if (time.getFullYear) {
+                    let year = time.getFullYear();
+                    let month = time.getMonth() + 1;
+                    let day = time.getDate();
+                    return year + "-" + this.formTime(month) + "-" + this.formTime(day);
+                } else {
+                    return time;
+                }
             },
             formTime(str) {
                 //规范分钟和秒的格式
@@ -255,25 +259,25 @@
             },
             handleEducation(object) {
                 switch (object.education) {
-                    case 1:
+                    case 0:
                         object.education = "小学";
                         break;
-                    case 2:
+                    case 1:
                         object.education = "初中";
                         break;
-                    case 3:
+                    case 2:
                         object.education = "高中";
                         break;
-                    case 4:
+                    case 3:
                         object.education = "专科";
                         break;
-                    case 5:
+                    case 4:
                         object.education = "本科";
                         break;
-                    case 6:
+                    case 5:
                         object.education = "硕士";
                         break;
-                    case 7:
+                    case 6:
                         object.education = "博士";
                         break;
                     default :
@@ -282,19 +286,19 @@
             },
             handleIdentityDocument(object) {
                 switch (object.identity_document) {
-                    case 1:
+                    case 0:
                         object.identity_document = "护照";
                         break;
-                    case 2:
+                    case 1:
                         object.identity_document = "学生证";
                         break;
-                    case 3:
+                    case 2:
                         object.identity_document = "身份证";
                         break;
                     default :
                         break;
                 }
-            },
+            }
         },
         mounted() {
             axios.defaults.headers.common['Authorization'] = "JWT " + this.token;

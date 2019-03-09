@@ -29,16 +29,16 @@
         </div>
         <div style="margin-top: 50px">
             <el-table :data="stayCaseData" border>
-                <el-table-column label="案件编号" align="center" prop="case_id" width="100"></el-table-column>
-                <el-table-column label="报案人姓名" align="center" prop="reporter.name" width="150"></el-table-column>
+                <el-table-column label="案件编号" align="center" prop="case_id" width="200"></el-table-column>
+                <el-table-column label="报案人姓名" align="center" prop="reporter.name" width="170"></el-table-column>
                 <el-table-column label="性别" align="center" prop="reporter.gender"></el-table-column>
                 <el-table-column label="年龄" align="center" prop="reporter.age"></el-table-column>
                 <el-table-column label="联系方式" align="center" prop="reporter.phone" width="150"></el-table-column>
                 <el-table-column label="报案时间" align="center" prop="occur_time" width="200"></el-table-column>
-                <el-table-column label="案件类型" align="center" prop="case_type" width="250"></el-table-column>
-                <el-table-column label="上报单位" align="center" prop="work_place" width="150"></el-table-column>
-                <el-table-column label="上报人员" align="center" prop="registrant.name" width="150"></el-table-column>
-                <el-table-column label="状态" align="center" prop="check_status" width="150"></el-table-column>
+                <el-table-column label="案件类型" align="center" prop="case_type" width="150"></el-table-column>
+                <el-table-column label="上报单位" align="center" prop="work_place"></el-table-column>
+                <el-table-column label="上报人员" align="center" prop="registrant.name" width="130"></el-table-column>
+                <el-table-column label="状态" align="center" prop="check_status" width="130"></el-table-column>
                 <el-table-column label="操作" align="center" fixed="right" width="150">
                     <template slot-scope="scope">
                         <el-button @click="showDetail(scope.row)" type="text" size="small">查看详情</el-button>
@@ -163,10 +163,14 @@
 
             changeTime(time) {
                 //将中国标准时间转换为年-月-日格式
-                let year = time.getFullYear();
-                let month = time.getMonth() + 1;
-                let day = time.getDate();
-                return year + "-" + this.formTime(month) + "-" + this.formTime(day);
+                if (time.getFullYear) {
+                    let year = time.getFullYear();
+                    let month = time.getMonth() + 1;
+                    let day = time.getDate();
+                    return year + "-" + this.formTime(month) + "-" + this.formTime(day);
+                }else{
+                    return time;
+                }
             },
             formTime(str) {
                 //规范分钟和秒的格式
@@ -222,32 +226,32 @@
             },
             handleTime(str) {
                 //处理时间格式
-                if(str){
+                if (str) {
                     let a = str.substring(0, 19);
                     return a.replace("T", ' ');
                 }
             },
             handleEducation(object) {
                 switch (object.education) {
-                    case 1:
+                    case 0:
                         object.education = "小学";
                         break;
-                    case 2:
+                    case 1:
                         object.education = "初中";
                         break;
-                    case 3:
+                    case 2:
                         object.education = "高中";
                         break;
-                    case 4:
+                    case 3:
                         object.education = "专科";
                         break;
-                    case 5:
+                    case 4:
                         object.education = "本科";
                         break;
-                    case 6:
+                    case 5:
                         object.education = "硕士";
                         break;
-                    case 7:
+                    case 6:
                         object.education = "博士";
                         break;
                     default :
@@ -256,13 +260,13 @@
             },
             handleIdentityDocument(object) {
                 switch (object.identity_document) {
-                    case 1:
+                    case 0:
                         object.identity_document = "护照";
                         break;
-                    case 2:
+                    case 1:
                         object.identity_document = "学生证";
                         break;
-                    case 3:
+                    case 2:
                         object.identity_document = "身份证";
                         break;
                     default :
@@ -300,13 +304,13 @@
                     }
                     //处理证件类型问题
                     this.handleIdentityDocument(this.stayCaseData[i].reporter);
-                    if(this.stayCaseData[i].sufferer){
+                    if (this.stayCaseData[i].sufferer) {
                         this.handleIdentityDocument(this.stayCaseData[i].sufferer);
                     }
-                    if(this.stayCaseData[i].suspect){
+                    if (this.stayCaseData[i].suspect) {
                         this.handleIdentityDocument(this.stayCaseData[i].suspect);
                     }
-                    if(this.stayCaseData[i].witness){
+                    if (this.stayCaseData[i].witness) {
                         this.handleIdentityDocument(this.stayCaseData[i].witness);
                     }
                 }

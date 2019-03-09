@@ -275,45 +275,45 @@
                     identity_types: [
                         {
                             name: '护照',
-                            id: 1,
+                            id: 0,
                         },
                         {
                             name: '学生证',
-                            id: 2,
+                            id: 1,
                         },
                         {
                             name: '身份证',
-                            id: 3,
+                            id: 2,
                         },
                     ],
                     educations: [
                         {
                             name: '小学',
-                            id: 1,
+                            id: 0,
                         },
                         {
                             name: '初中',
-                            id: 2,
+                            id: 1,
                         },
                         {
                             name: '高中',
-                            id: 3,
+                            id: 2,
                         },
                         {
                             name: '专科',
-                            id: 4,
+                            id: 3,
                         },
                         {
                             name: '本科',
-                            id: 5,
+                            id: 4,
                         },
                         {
                             name: '硕士',
-                            id: 6,
+                            id: 5,
                         },
                         {
                             name: '博士',
-                            id: 7,
+                            id: 6,
                         },
                     ],
                 },

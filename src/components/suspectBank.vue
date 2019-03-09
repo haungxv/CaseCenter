@@ -175,25 +175,25 @@
             },
             handleEducation(object) {
                 switch (object.education) {
-                    case 1:
+                    case 0:
                         object.education = "小学";
                         break;
-                    case 2:
+                    case 1:
                         object.education = "初中";
                         break;
-                    case 3:
+                    case 2:
                         object.education = "高中";
                         break;
-                    case 4:
+                    case 3:
                         object.education = "专科";
                         break;
-                    case 5:
+                    case 4:
                         object.education = "本科";
                         break;
-                    case 6:
+                    case 5:
                         object.education = "硕士";
                         break;
-                    case 7:
+                    case 6:
                         object.education = "博士";
                         break;
                     default :
@@ -202,13 +202,13 @@
             },
             handleIdentityDocument(object) {
                 switch (object.identity_document) {
-                    case 1:
+                    case 0:
                         object.identity_document = "护照";
                         break;
-                    case 2:
+                    case 1:
                         object.identity_document = "学生证";
                         break;
-                    case 3:
+                    case 2:
                         object.identity_document = "身份证";
                         break;
                     default :

@@ -49,7 +49,7 @@
         </div>
         <div style="margin-top: 50px">
             <el-table :data="workCaseData" border>
-                <el-table-column label="案件编号" align="center" prop="case_id" width="80"></el-table-column>
+                <el-table-column label="案件编号" align="center" prop="case_id" width="200"></el-table-column>
                 <el-table-column label="报案人姓名" align="center" prop="reporter.name" width="100"></el-table-column>
                 <el-table-column label="性别" align="center" prop="reporter.gender" width="70"></el-table-column>
                 <el-table-column label="年龄" align="center" prop="reporter.age" width="70"></el-table-column>
@@ -321,11 +321,14 @@
 
             changeTime(time) {
                 //将中国标准时间转换为年-月-日格式
+                if (time.getFullYear) {
                     let year = time.getFullYear();
                     let month = time.getMonth() + 1;
                     let day = time.getDate();
                     return year + "-" + this.formTime(month) + "-" + this.formTime(day);
-
+                } else {
+                    return time;
+                }
             },
             formTime(str) {
                 //规范分钟和秒的格式
@@ -381,32 +384,32 @@
             },
             handleTime(str) {
                 //处理时间格式
-                if(str){
+                if (str) {
                     let a = str.substring(0, 19);
                     return a.replace("T", ' ');
                 }
             },
             handleEducation(object) {
                 switch (object.education) {
-                    case 1:
+                    case 0:
                         object.education = "小学";
                         break;
-                    case 2:
+                    case 1:
                         object.education = "初中";
                         break;
-                    case 3:
+                    case 2:
                         object.education = "高中";
                         break;
-                    case 4:
+                    case 3:
                         object.education = "专科";
                         break;
-                    case 5:
+                    case 4:
                         object.education = "本科";
                         break;
-                    case 6:
+                    case 5:
                         object.education = "硕士";
                         break;
-                    case 7:
+                    case 6:
                         object.education = "博士";
                         break;
                     default :
@@ -415,13 +418,13 @@
             },
             handleIdentityDocument(object) {
                 switch (object.identity_document) {
-                    case 1:
+                    case 0:
                         object.identity_document = "护照";
                         break;
-                    case 2:
+                    case 1:
                         object.identity_document = "学生证";
                         break;
-                    case 3:
+                    case 2:
                         object.identity_document = "身份证";
                         break;
                     default :
