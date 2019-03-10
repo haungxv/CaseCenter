@@ -102,13 +102,16 @@
                     type_code: this.state,
                     page_code: this.currentPage,
                 });
-                instance.post(`http://120.79.137.221:801/api/v1/cases/get_monitoring/`, data)
+                instance.post(`/api/v1/cases/get_monitoring/`, data)
                     .then((res) => {
                         this.tableData = res.data.items;
                         this.pageCount = res.data.totalNum;
                     })
                     .catch((err) => {
-
+                        this.$message({
+                            message: err,
+                            type: 'error'
+                        })
                     });
 
             },
@@ -126,7 +129,7 @@
                     type_code: this.state,
                     page_code: this.currentPage,
                 });
-                instance.post(`http://120.79.137.221:801/api/v1/cases/get_monitoring/`, data)
+                instance.post(`/api/v1/cases/get_monitoring/`, data)
                     .then((res) => {
                         this.tableData = res.data.items;
                         this.pageCount = res.data.totalNum;

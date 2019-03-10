@@ -2,39 +2,44 @@
     <div>
         <!--案件详细信息-->
         <el-dialog title="案件详情" width="90%" :visible.sync="dialogVisible" :before-close="closeDetail">
-            <case-dialog :caseDetail="caseDetail"
-                         :caseDetailReporter="caseDetailReporter"
-                         :caseDetailSuffer="caseDetailSuffer"
-                         :caseDetailSuspect="caseDetailSuspect"
-                         :caseDetailWitness="caseDetailWitness"
-                         :caseDetailProperty="caseDetailProperty"
-                         :show_suffer="show_suffer"
-                         :show_suspect="show_suspect"
-                         :show_witness="show_witness"
-                         :show_property="show_property"
-            ></case-dialog>
-            <div v-if="show_reviewResult" style="margin-top: 20px">
-                <el-form :model="review" :rules="rules" ref="case_review">
-                    <el-form-item label="审核结果" prop="yes_no">
-                        <el-radio class="radio" v-model="review.yes_no" label="1">通过</el-radio>
-                        <el-radio class="radio" v-model="review.yes_no" label="2">不通过</el-radio>
-                    </el-form-item>
-                    <el-form-item label="原因" prop="reason">
-                        <el-input v-model="review.reason"></el-input>
-                    </el-form-item>
-                </el-form>
-            </div>
-            <span slot="footer" class="dialog-footer" v-if="show_reviewResult">
+            <div id="detail_print">
+                <case-dialog :caseDetail="caseDetail"
+                             :caseDetailReporter="caseDetailReporter"
+                             :caseDetailSuffer="caseDetailSuffer"
+                             :caseDetailSuspect="caseDetailSuspect"
+                             :caseDetailWitness="caseDetailWitness"
+                             :caseDetailProperty="caseDetailProperty"
+                             :show_suffer="show_suffer"
+                             :show_suspect="show_suspect"
+                             :show_witness="show_witness"
+                             :show_property="show_property"
+                ></case-dialog>
+                <div v-if="show_reviewResult" style="margin-top: 20px">
+                    <el-form :model="review" :rules="rules" ref="case_review">
+                        <el-form-item label="审核结果" prop="yes_no">
+                            <el-radio class="radio" v-model="review.yes_no" label="1">通过</el-radio>
+                            <el-radio class="radio" v-model="review.yes_no" label="2">不通过</el-radio>
+                        </el-form-item>
+                        <el-form-item label="原因" prop="reason">
+                            <el-input v-model="review.reason"></el-input>
+                        </el-form-item>
+                    </el-form>
+                </div>
+                <span slot="footer" class="dialog-footer" v-if="show_reviewResult">
                    <el-button @click="dialogVisible = false">取 消</el-button>
                    <el-button type="primary" @click="review_case(caseDetail.id,'case_review')">确 定</el-button>
                 </span>
-            <div style="text-align: left" v-if="!show_reviewResult">
-                审核结果
-                <hr>
-                <el-form :inline="true">
-                    <el-form-item label="审核结果:" style="width: 20%">{{caseDetail.check_status}}</el-form-item>
-                    <el-form-item label="原因:" style="width: 100%">{{caseDetail.pass_reason}}</el-form-item>
-                </el-form>
+                <div style="text-align: left" v-if="!show_reviewResult">
+                    审核结果
+                    <hr>
+                    <el-form :inline="true">
+                        <el-form-item label="审核结果:" style="width: 50%">{{caseDetail.check_status}}</el-form-item>
+                        <el-form-item label="原因:" style="width: 100%">{{caseDetail.pass_reason}}</el-form-item>
+                    </el-form>
+                </div>
+                <div style="text-align: left" class="print_detail_button">
+                    <el-button type="message" @click="print">点击打印</el-button>
+                </div>
             </div>
         </el-dialog>
         <div style="text-align: left">
@@ -46,7 +51,7 @@
             <el-table :data="caseReviewData" border>
                 <el-table-column label="案件编号" align="center" prop="case_id"></el-table-column>
                 <el-table-column label="提交时间" align="center" prop="occur_time"></el-table-column>
-                <el-table-column label="登记人" align="center" prop="reporter.name"></el-table-column>
+                <el-table-column label="报案人" align="center" prop="reporter.name"></el-table-column>
                 <el-table-column label="状态" align="center" prop="check_status"></el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
@@ -102,6 +107,16 @@
             }
         },
         methods: {
+            print() {
+                if(this.show_reviewResult){
+                    document.getElementsByClassName("dialog-footer")[0].style.display = 'none';
+                }
+                document.getElementsByClassName("print_detail_button")[0].style.display = 'none';
+                let newstr = document.getElementById('detail_print').innerHTML;//得到需要打印的元素HTML
+                document.body.innerHTML = newstr;
+                window.print();
+                window.location.reload();
+            },
             getCases(num) {
                 //获取所有案件
                 let instance = axios.create({
@@ -110,7 +125,7 @@
                         "Authorization": "JWT " + this.token,
                     }
                 });
-                instance.get("http://120.79.137.221:801/api/v1/cases/")
+                instance.get("/api/v1/cases/")
                     .then((res) => {
                             let caseReview_noSee = [],
                                 caseReview_yes = [],
@@ -217,7 +232,7 @@
                             reason: this.review.reason,
                             check_status: this.review.yes_no,
                         });
-                        instance.post("http://120.79.137.221:801/api/v1/cases/" + id + "/check/", data)
+                        instance.post("/api/v1/cases/" + id + "/check/", data)
                             .then((res) => {
                                 this.closeDetail();
                                 this.getCases(0);
@@ -246,7 +261,7 @@
             },
             handleTime(str) {
                 //处理时间格式
-                if(str){
+                if (str) {
                     let a = str.substring(0, 19);
                     return a.replace("T", ' ');
                 }
@@ -292,7 +307,7 @@
                     default :
                         break;
                 }
-            }
+            },
         },
         mounted() {
             axios.defaults.headers.common['Authorization'] = "JWT " + this.token;

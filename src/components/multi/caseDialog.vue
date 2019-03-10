@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="detail_print">
         <div style="text-align: left">
             报案类型
             <hr>
@@ -24,8 +24,8 @@
             案发情况
             <hr>
             <el-form :inline="true">
-                <el-form-item label="案发地点:" style="width: 39%">{{caseDetail.occur_place}}</el-form-item>
-                <el-form-item label="案发时间段:" style="width: 50%">
+                <el-form-item label="案发地点:" style="width: 100%">{{caseDetail.occur_place}}</el-form-item>
+                <el-form-item label="案发时间段:" style="width: 100%">
                     {{caseDetail.start_time}}—{{caseDetail.end_time}}
                 </el-form-item>
                 <el-form-item label="案情:" style="width: 100%">{{caseDetail.desc}}</el-form-item>
@@ -44,17 +44,28 @@
             损失财物信息
             <hr>
             <el-form :inline="true">
-                <el-form-item label="物品名称:" style="width: 18.5%">{{caseDetailProperty.name}}</el-form-item>
-                <el-form-item label="所有权性质:" style="width: 18.5%">{{caseDetailProperty.is_private===true?'私有':'非私有'}}</el-form-item>
-                <el-form-item label="品牌:" style="width: 18.5%">{{caseDetailProperty.brand}}</el-form-item>
-                <el-form-item label="型号:" style="width: 18.5%">{{caseDetailProperty.version}}</el-form-item>
-                <el-form-item label="颜色:" style="width: 18.5%">{{caseDetailProperty.color}}</el-form-item>
-                <el-form-item label="其他特征:" style="width: 18.5%">{{caseDetailProperty.other_feature}}</el-form-item>
-                <el-form-item label="数量:" style="width: 18.5%">{{caseDetailProperty.sum}}</el-form-item>
-                <el-form-item label="购买时间:" style="width: 18.5%">{{caseDetailProperty.bought_time}}</el-form-item>
-                <el-form-item label="购置价格:" style="width: 18.5%">{{caseDetailProperty.price}}</el-form-item>
+                <el-form-item label="物品名称:" style="width: 30%">{{caseDetailProperty.name}}</el-form-item>
+                <el-form-item label="所有权性质:" style="width: 30%">
+                    {{caseDetailProperty.is_private===true?'本人所有':'非本人所有'}}
+                </el-form-item>
+                <el-form-item label="品牌:" style="width: 30%">{{caseDetailProperty.brand}}</el-form-item>
+                <el-form-item label="型号:" style="width: 30%">{{caseDetailProperty.version}}</el-form-item>
+                <el-form-item label="颜色:" style="width: 30%">{{caseDetailProperty.color}}</el-form-item>
+                <el-form-item label="其他特征:" style="width: 30%">{{caseDetailProperty.other_feature}}</el-form-item>
+                <el-form-item label="数量:" style="width: 30%">{{caseDetailProperty.sum}}</el-form-item>
+                <el-form-item label="购买时间:" style="width: 30%">{{caseDetailProperty.bought_time}}</el-form-item>
+                <el-form-item label="购置价格:" style="width: 30%">{{caseDetailProperty.price}}</el-form-item>
             </el-form>
         </div>
+        <div style="text-align: left">
+            <hr>
+            <el-form :inline="true">
+                <el-form-item label="是否查看监控:" style="width: 100%">{{caseDetail.saw_monitoring?'是':'否'}}</el-form-item>
+                <el-form-item label="是否通知公安机关等部门:" style="width: 100%">{{caseDetail.called_police?'是':'否'}}
+                </el-form-item>
+            </el-form>
+        </div>
+
     </div>
 </template>
 
@@ -67,7 +78,10 @@
             'caseDetailWitness', 'caseDetailProperty',
             'show_suffer', 'show_suspect', 'show_witness', 'show_property'],
         components: {Info},
-        name: "caseDialog"
+        name: "caseDialog",
+        methods: {
+
+        },
     }
 </script>
 

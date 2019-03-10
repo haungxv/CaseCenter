@@ -79,7 +79,7 @@
                         let data = qs.stringify({
                             "password": this.PasswordForm.pass,
                         });
-                        instance.post("http://120.79.137.221:801/api/v1/users/reset_pwd/", data)
+                        instance.post("/api/v1/users/reset_pwd/", data)
                             .then((res) => {
                                 this.resetForm('PasswordForm');
                                 this.$message({

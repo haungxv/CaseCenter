@@ -17,7 +17,7 @@
                 审核结果
                 <hr>
                 <el-form :inline="true">
-                    <el-form-item label="审核结果:" style="width: 20%">{{caseDetail.check_status}}</el-form-item>
+                    <el-form-item label="审核结果:" style="width: 50%">{{caseDetail.check_status}}</el-form-item>
                     <el-form-item label="原因:" style="width: 100%">{{caseDetail.pass_reason}}</el-form-item>
                 </el-form>
             </div>
@@ -143,7 +143,7 @@
         },
         methods: {
             getWeeks() {
-                axios.post("http://120.79.137.221:801/api/v1/cases/" + this.year + "/weekly/")
+                axios.post("/api/v1/cases/" + this.year + "/weekly/")
                     .then((res) => {
                         this.weeklyLists = res.data;
                         this.week = this.weeklyLists.length;

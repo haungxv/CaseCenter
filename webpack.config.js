@@ -88,7 +88,7 @@ if (isDev) {
     config.output = {
         filename: '[name].[chunkhash:8].js',
         path: path.join(__dirname, 'caseCenter'),
-        // publicPath: 'http://47.100.48.121:82/caseCenter/'
+        publicPath: '/'
     };
     config.module.rules.push({
         test: /\.css$/,

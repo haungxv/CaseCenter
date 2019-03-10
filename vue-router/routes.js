@@ -17,7 +17,7 @@ import suspectBank from '../src/components/suspectBank.vue'
 import weekSummary from '../src/components/weekSummary.vue'
 import changePass from '../src/components/changePass.vue'
 import monitorCenter from '../src/components/monitorCenter.vue'
-
+import changeInfo from '../src/components/changeInfo.vue'
 
 export default [
     {
@@ -95,6 +95,10 @@ export default [
             {
                 path: 'monitorCenter',
                 component: monitorCenter
+            },
+            {
+                path: 'changeInfo',
+                component: changeInfo
             },
         ]
     },

@@ -1,0 +1,187 @@
+
+#app[data-v-323430e0] {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+}
+
+
+.sign[data-v-442b47f9] {
+    width: 100%;
+    height: 100vh;
+    background-image: url(../bg.jpg);
+    overflow: hidden;
+}
+.sign_box[data-v-442b47f9] {
+    width: 20%;
+    border: 1px solid #BFCBD9;
+    border-radius: 10px;
+    margin: 10% auto 0 auto;
+    padding: 50px 20px;
+}
+h1[data-v-442b47f9] {
+    color: white;
+    font-size: 50px;
+    margin-top: 10%;
+}
+.self-input[data-v-442b47f9] {
+    -webkit-appearance: none;
+    background-color: #fff;
+    background-image: none;
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #606266;
+    display: inline-block;
+    font-size: inherit;
+    height: 40px;
+    line-height: 40px;
+    outline: 0;
+    padding: 0 15px;
+    width: 80%;
+}
+input[data-v-442b47f9]:-ms-input-placeholder{color:#606266;}/* Internet Explorer 10+ */
+input[data-v-442b47f9]::-webkit-input-placeholder{color:#606266;}/* WebKit browsers */
+input[data-v-442b47f9]::-moz-placeholder{color:#606266;}/* Mozilla Firefox 4 to 18 */
+input[data-v-442b47f9]:-moz-placeholder{color:#606266;}/* Mozilla Firefox 19+ */
+
+
+.manager[data-v-8e8c1390] {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    position: relative;
+}
+.left[data-v-8e8c1390] {
+    box-sizing: border-box;
+    background-color: #324057;
+    width: 12.5%;
+    min-height: 100%;
+    left: 0;
+    z-index: 2;
+
+    top: 0;
+    bottom: 0;
+    position: fixed;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.right[data-v-8e8c1390] {
+    box-sizing: border-box;
+    width: 87.5%;
+    height: 100%;
+    margin-left: 12.5%;
+    padding: 50px;
+}
+span[data-v-8e8c1390] {
+    font-size: 16px;
+}
+.el-menu[data-v-8e8c1390] {
+    border: 1px solid #324057;
+}
+
+
+.el-form-item[data-v-01a73592] {
+    color: red;
+}
+
+
+.el-form-item[data-v-1721c8e9] {
+    color: red;
+}
+
+
+.el-form-item[data-v-34928e3c] {
+    color: red;
+}
+
+
+.print[data-v-5c9e94ac] {
+    display: none;
+}
+
+
+.print_1[data-v-3c68bf0c] {
+    display: none;
+}
+
+
+.el-form-item[data-v-2107d38f] {
+    color: red;
+}
+.searchName[data-v-2107d38f] {
+    width: 250px;
+}
+
+
+.el-form-item[data-v-d471b3c4] {
+    color: red;
+}
+
+
+.el-form-item[data-v-7ed9f81b] {
+    color: red;
+}
+
+
+.el-form-item[data-v-cc778628] {
+    color: red;
+}
+
+
+.el-form-item[data-v-7ccc1446] {
+    color: red;
+}
+.chart[data-v-7ccc1446] {
+    width: 100%;
+    height: 100%;
+}
+.chart[data-v-7ccc1446]:after {
+    clear: both;
+    content: '';
+    display: block;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+}
+#pie[data-v-7ccc1446], #bar[data-v-7ccc1446] {
+    width: 500px;
+    height: 500px;
+    float: left;
+    margin-right: 30px;
+    margin-left: 10px;
+}
+.excel[data-v-7ccc1446]:after {
+    clear: both;
+    content: '';
+    display: block;
+}
+
+
+
+
+.searchName[data-v-fd59bf50] {
+    width: 250px;
+}
+
+
+.el-form-item[data-v-660df1b4] {
+    color: red;
+}
+
+
+.el-form-item[data-v-ac5884ba] {
+    color: red;
+}
+
+
+.el-form-item[data-v-8af5bece] {
+    color: red;
+}
+

@@ -187,7 +187,7 @@
                 let instance = axios.create({
                     headers: {'content-type': 'application/x-www-form-urlencoded'}
                 });
-                axios.get("http://120.79.137.221:801/api/v1/address/")
+                axios.get("/api/v1/address/")
                     .then((res) => {
                         this.address1_s = this.getList(res);
                         this['setLabelPosition'](res.data);
@@ -201,7 +201,7 @@
                 let instance = axios.create({
                     headers: {'content-type': 'application/x-www-form-urlencoded'}
                 });
-                axios.get("http://120.79.137.221:801/api/v1/casetype/")
+                axios.get("/api/v1/casetype/")
                     .then((res) => {
                         this.type1_s = this.getList(res);
                         this['setLabelType'](res.data);
@@ -215,7 +215,7 @@
                 let instance = axios.create({
                     headers: {'content-type': 'application/x-www-form-urlencoded'}
                 });
-                axios.get("http://120.79.137.221:801/api/v1/profession/")
+                axios.get("/api/v1/profession/")
                     .then((res) => {
                         let length = res.data.length;
                         let array_1 = [];
@@ -256,7 +256,7 @@
                     "name": name,
                     "in_school": in_school,
                 });
-                instance.post("http://120.79.137.221:801/api/v1/profession/", data)
+                instance.post("/api/v1/profession/", data)
                     .then((res) => {
                         this.Refresh('profession');
                         this.success('添加成功！');
@@ -279,7 +279,7 @@
                     let instance = axios.create({
                         headers: {'content-type': 'application/x-www-form-urlencoded'}
                     });
-                    instance.delete("http://120.79.137.221:801/api/v1/profession/" + in_school + "/")
+                    instance.delete("/api/v1/profession/" + in_school + "/")
                         .then((res) => {
                             this.Refresh('profession');
                             this.success('删除成功！');
@@ -373,7 +373,7 @@
                         "is_parent": false,
                     });
                 }
-                instance.post("http://120.79.137.221:801/api/v1/" + site + '/', data)
+                instance.post("/api/v1/" + site + '/', data)
                     .then((res) => {
                         this.dialogVisible = false;
                         this.add = '';
@@ -414,7 +414,7 @@
                     let instance = axios.create({
                         headers: {'content-type': 'application/x-www-form-urlencoded'}
                     });
-                    instance.delete("http://120.79.137.221:801/api/v1/" + str + "/" + id + "/")
+                    instance.delete("/api/v1/" + str + "/" + id + "/")
                         .then((res) => {
                             this.Refresh(str);
                             this.success('删除成功！');

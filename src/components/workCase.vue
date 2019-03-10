@@ -2,6 +2,7 @@
     <div>
         <!--案件详情弹出框 -->
         <el-dialog title="案件详情" width="90%" :visible.sync="dialogVisible" :before-close="closeDetail">
+            <div id="detail_print">
             <case-dialog :caseDetail="caseDetail"
                          :caseDetailReporter="caseDetailReporter"
                          :caseDetailSuffer="caseDetailSuffer"
@@ -17,9 +18,13 @@
                 审核结果
                 <hr>
                 <el-form :inline="true">
-                    <el-form-item label="审核结果:" style="width: 20%">{{caseDetail.check_status}}</el-form-item>
+                    <el-form-item label="审核结果:" style="width: 50%">{{caseDetail.check_status}}</el-form-item>
                     <el-form-item label="原因:" style="width: 100%">{{caseDetail.pass_reason}}</el-form-item>
                 </el-form>
+            </div>
+                <div style="text-align: left" class="print_detail_button">
+                    <el-button type="message" @click="print">点击打印</el-button>
+                </div>
             </div>
         </el-dialog>
         <!--处理案件弹出框-->
@@ -200,6 +205,13 @@
             }
         },
         methods: {
+            print() {
+                document.getElementsByClassName("print_detail_button")[0].style.display = 'none';
+                let newstr = document.getElementById('detail_print').innerHTML;//得到需要打印的元素HTML
+                document.body.innerHTML = newstr;
+                window.print();
+                window.location.reload();
+            },
             getCases() {
                 //获取所有案件
                 let instance = axios.create({
@@ -208,7 +220,7 @@
                         "Authorization": "JWT " + this.token,
                     }
                 });
-                instance.get("http://120.79.137.221:801/api/v1/cases/")
+                instance.get("/api/v1/cases/")
                     .then((res) => {
                         let workCase = [];
                         let length = res.data.length;
@@ -300,7 +312,7 @@
                     deal_status: 2,
                     deal_result: this.result.join('/'),
                 });
-                instance.post("http://120.79.137.221:801/api/v1/cases/" + this.row.id + "/deal/", data)
+                instance.post("/api/v1/cases/" + this.row.id + "/deal/", data)
                     .then((res) => {
                         this.dialogDispose = false;
                         this.row = {};

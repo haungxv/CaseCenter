@@ -1,7 +1,6 @@
 <template>
     <div class="manager">
         <div class="left">
-            <!--<div style="color: #fff451;font-size: 20px;margin-top:10px;">欢迎你:{{realname}}</div>-->
             <div style="color: #ff2217;font-size: 12px;cursor: pointer;margin-top:20px;" @click="exit">退出</div>
             <el-menu :router="true" class="el-menu-vertical-demo " background-color="#324057" text-color="#fff"
                      active-text-color="#20a0ff"
@@ -16,6 +15,7 @@
                 <el-menu-item v-if="on_off" index="/manager/manageAccount"><span>账户管理</span></el-menu-item>
                 <el-menu-item v-if="on_off" index="/manager/addAccount"><span>新增账户</span></el-menu-item>
                 <el-menu-item index="/manager/changePass"><span>修改密码</span></el-menu-item>
+                <el-menu-item index="/manager/changeInfo"><span>修改账户</span></el-menu-item>
                 <el-menu-item index="/manager/manageLabel"><span>标签管理</span></el-menu-item>
                 <el-menu-item index="/manager/trackRecord"><span>留痕日志</span></el-menu-item>
                 <el-menu-item index="/manager/caseStatic"><span>案件统计</span></el-menu-item>

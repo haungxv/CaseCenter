@@ -4,10 +4,10 @@
         <div class="sign_box">
             <el-form :model="form">
                 <el-form-item>
-                    <el-input v-model="form.username" style="width: 80%" placeholder="请输入账号"></el-input>
+                    <input v-model="form.username" class="self-input" type="text" placeholder="请输入账号"/>
                 </el-form-item>
                 <el-form-item>
-                    <el-input v-model="form.password" style="width: 80%" placeholder="请输入密码"></el-input>
+                    <input v-model="form.password" class="self-input" type="password" placeholder="请输入密码"/>
                 </el-form-item>
             </el-form>
             <el-button type="primary" style="width: 80%" @click="login">登录</el-button>
@@ -54,7 +54,7 @@
                         console.log(err)
                     })
             },
-            ...mapMutations(['setToken','setRole']),
+            ...mapMutations(['setToken', 'setRole']),
         }
     }
 </script>
@@ -80,4 +80,26 @@
         font-size: 50px;
         margin-top: 10%;
     }
+
+    .self-input {
+        -webkit-appearance: none;
+        background-color: #fff;
+        background-image: none;
+        border-radius: 4px;
+        border: 1px solid #dcdfe6;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        color: #606266;
+        display: inline-block;
+        font-size: inherit;
+        height: 40px;
+        line-height: 40px;
+        outline: 0;
+        padding: 0 15px;
+        width: 80%;
+    }
+    input:-ms-input-placeholder{color:#606266;}/* Internet Explorer 10+ */
+    input::-webkit-input-placeholder{color:#606266;}/* WebKit browsers */
+    input::-moz-placeholder{color:#606266;}/* Mozilla Firefox 4 to 18 */
+    input:-moz-placeholder{color:#606266;}/* Mozilla Firefox 19+ */
 </style>

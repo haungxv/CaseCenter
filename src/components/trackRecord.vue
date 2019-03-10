@@ -40,10 +40,12 @@
                 let instance = axios.create({
                     headers: {'content-type': 'application/x-www-form-urlencoded'}
                 });
-                instance.get("http://120.79.137.221:801/api/v1/logs/")
+                instance.get("/api/v1/logs/")
                     .then((res) => {
-                        this.allData = res.data;
-                        this.logs = res.data;
+                        let array = res.data;
+                        array.reverse();
+                        this.allData = array;
+                        this.logs = array;
                     })
                     .catch((err) => {
                         this.$message({

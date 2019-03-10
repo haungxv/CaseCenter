@@ -17,9 +17,9 @@
                 <el-input v-model="form.identity_card"></el-input>
             </el-form-item>
             <el-form-item label="权 限：">
-                <el-radio class="radio" v-model="form.role" label=0>治安科工作人员</el-radio>
-                <el-radio class="radio" v-model="form.role" label=1>治安科助管</el-radio>
-                <el-radio class="radio" v-model="form.role" label=2>案件中心管理员</el-radio>
+                <el-radio class="radio" v-model="form.role" :label=0>案件中心管理员</el-radio>
+                <el-radio class="radio" v-model="form.role" :label=1>治安科工作人员</el-radio>
+                <el-radio class="radio" v-model="form.role" :label=2>治安科助管</el-radio>
             </el-form-item>
             <el-form-item label="用户名称：" prop="username">
                 <el-input v-model="form.username"></el-input>
@@ -39,6 +39,11 @@
 </template>
 <script>
     import axios from 'axios';
+    import {
+        mapState,
+        mapMutations,
+    } from 'vuex'
+
     export default {
         data() {
             var validatePass = (rule, value, callback) => {
@@ -66,7 +71,7 @@
                     phone: '',
                     email: '',
                     identity_card: '',
-                    role: Number,
+                    role: 0,
                     username: '',
                     password: ''
                 },
@@ -91,24 +96,24 @@
                             });
                             let data = qs.stringify({
                                 "name": this.form.name,
-                                "phone":this.form.phone,
+                                "phone": this.form.phone,
                                 "email": this.form.email,
                                 "identity_card": this.form.identity_card,
-                                "role":this.form.role,
-                                "username":this.form.username
+                                "role": this.form.role,
+                                "username": this.form.username,
+                                "password": this.form.password
                             });
-                            instance.post("http://120.79.137.221:801/api/v1/users/", data)
+                            instance.post("/api/v1/users/", data)
                                 .then((res) => {
-                                    this. resetForm('form');
+                                    this.resetForm('form');
                                     this.$message({
                                         message: '添加成功！',
                                         type: 'success'
                                     })
                                 })
-                                .catch(function (err) {
-                                    this. resetForm('form');
+                                .catch((err) => {
                                     this.$message({
-                                        message: '添加失败！',
+                                        message: "添加失败！",
                                         type: 'error'
                                     })
                                 });
@@ -121,6 +126,14 @@
                 //重置
                 this.$refs[formName].resetFields();
             }
+        },
+        mounted() {
+            axios.defaults.headers.common['Authorization'] = "JWT " + this.token;
+        },
+        computed: {
+            ...mapState({
+                token: state => state.token,
+            })
         }
     }
 </script>

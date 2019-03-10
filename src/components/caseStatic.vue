@@ -17,7 +17,7 @@
                 审核结果
                 <hr>
                 <el-form :inline="true">
-                    <el-form-item label="审核结果:" style="width: 20%">{{caseDetail.check_status}}</el-form-item>
+                    <el-form-item label="审核结果:" style="width: 50%">{{caseDetail.check_status}}</el-form-item>
                     <el-form-item label="原因:" style="width: 100%">{{caseDetail.pass_reason}}</el-form-item>
                 </el-form>
             </div>
@@ -252,7 +252,7 @@
                         'content-type': 'application/x-www-form-urlencoded',
                     }
                 });
-                instance.get("http://120.79.137.221:801/api/v1/cases/")
+                instance.get("/api/v1/cases/")
                     .then((res) => {
                             this.allCases = res.data;
                             this.caseLists = res.data;
