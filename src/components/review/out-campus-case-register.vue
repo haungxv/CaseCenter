@@ -260,13 +260,15 @@
     </div>
 </template>
 <script>
-    import axios from 'axios';
+    import axios from 'axios'
+
     import {
         mapState,
         mapMutations,
     } from 'vuex'
 
     export default {
+        props:['msgOut'],
         data() {
             return {
                 rules: {
@@ -426,10 +428,6 @@
                     case_type = (this.caseInformation.caseType.length === 1) ? this.caseInformation.caseType[0] : this.caseInformation.caseType[1];
                     occur_place = (this.caseInformation.occur_place.length === 1) ? this.caseInformation.occur_place[0] : this.caseInformation.occur_place[1];
 
-                    let qs = require('qs');
-                    let instance = axios.create({
-                        headers: {'Content-Type': 'application/json'}
-                    });
                     let data = {
                         "occur_time": this.caseInformation.caseTime,
                         "registrant": null,
@@ -445,7 +443,7 @@
                         "called_police": this.called_police,
                         "saw_monitoring": this.saw_monitoring,
                     };
-                    axios.post("/api/v1/cases/", data)
+                    this.$post("/api/v1/cases/", data)
                         .then((res) => {
                             this.success("案件录入成功！");
                             this.print();
@@ -538,10 +536,7 @@
             },
             caseType() {
                 //获取案件类型
-                let instance = axios.create({
-                    headers: {'content-type': 'application/x-www-form-urlencoded'}
-                });
-                axios.get("/api/v1/casetype/")
+                this.$get("/api/v1/casetype/")
                     .then((res) => {
                         let array_1 = this.getList(res);
                         let array_2 = [];
@@ -576,10 +571,7 @@
             },
             casePosition() {
                 //获取案发地点
-                let instance = axios.create({
-                    headers: {'content-type': 'application/x-www-form-urlencoded'}
-                });
-                axios.get("/api/v1/address/")
+                this.$get("/api/v1/address/")
                     .then((res) => {
                         let array_1 = this.getList(res);
                         let array_2 = [];
@@ -614,10 +606,7 @@
             },
             profession() {
                 //获取职业或者身份
-                let instance = axios.create({
-                    headers: {'content-type': 'application/x-www-form-urlencoded'}
-                });
-                instance.get("/api/v1/profession/")
+                this.$get("/api/v1/profession/")
                     .then((res) => {
                         let length = res.data.length;
                         let array_1 = [];
@@ -770,6 +759,11 @@
             samePerson: function () {
                 this.show_suffer = (this.samePerson === '1') ? false : true;
             },
+            msgOut: function () {
+                this.caseType();
+                this.casePosition();
+                this.profession();
+            }
         }
     }
 </script>

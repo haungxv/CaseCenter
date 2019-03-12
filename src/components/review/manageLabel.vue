@@ -103,6 +103,26 @@
                 </el-form-item>
             </el-form>
         </div>
+        <div style="text-align: left">
+            <h4 style="text-align: left">学院或单位</h4>
+            <el-form :inline="true">
+                <el-form-item label="学院或单位">
+                    <el-select v-model.number="unit" placeholder="学院或单位详情">
+                        <el-option
+                                v-for="item in units"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-input style="width: 200px;margin-right: 15px" v-model="add_unit"
+                          placeholder="新增学院或单位"></el-input>
+                <el-button @click="addUnit">添加</el-button>
+                <el-button @click="delUnit">删除</el-button>
+            </el-form>
+        </div>
+
         <el-dialog
                 :title="dialogTitle"
                 :visible.sync="dialogVisible">
@@ -117,13 +137,14 @@
     </div>
 </template>
 <script>
-    import axios from 'axios';
+    import axios from 'axios'
     import {
         mapState,
         mapMutations,
     } from 'vuex'
 
     export default {
+        props:['msgLabel'],
         data() {
             return {
                 inSchool: '',  //校内职业或身份
@@ -143,6 +164,10 @@
                 type1_s: [],  //案件类型一级标签
                 type2: '',
                 type2_s: [],   //案件类型二级标签
+
+                unit: '',//当前选择的学院或单位
+                units: [],//所有学院或单位列表
+                add_unit: '',//要增加的学院或单位
 
                 dialogVisible: false,//添加标签弹窗是否展示
                 dialogTitle: '',     //添加标签弹窗标题
@@ -184,10 +209,7 @@
             },
             casePosition() {
                 //获取案发地点
-                let instance = axios.create({
-                    headers: {'content-type': 'application/x-www-form-urlencoded'}
-                });
-                axios.get("/api/v1/address/")
+                this.$get("/api/v1/address/")
                     .then((res) => {
                         this.address1_s = this.getList(res);
                         this['setLabelPosition'](res.data);
@@ -198,10 +220,7 @@
             },
             caseType() {
                 //获取案件类型
-                let instance = axios.create({
-                    headers: {'content-type': 'application/x-www-form-urlencoded'}
-                });
-                axios.get("/api/v1/casetype/")
+                this.$get("/api/v1/casetype/")
                     .then((res) => {
                         this.type1_s = this.getList(res);
                         this['setLabelType'](res.data);
@@ -212,10 +231,7 @@
             },
             profession() {
                 //获取职业或者身份
-                let instance = axios.create({
-                    headers: {'content-type': 'application/x-www-form-urlencoded'}
-                });
-                axios.get("/api/v1/profession/")
+                this.$get("/api/v1/profession/")
                     .then((res) => {
                         let length = res.data.length;
                         let array_1 = [];
@@ -242,21 +258,70 @@
                         this.fail('获取职业或身份失败！');
                     });
             },
+            getUnits() {
+                this.$get("/api/v1/workplace/")
+                    .then((res) => {
+                        this.units = res.data;
+                    })
+                    .catch((err) => {
+                        this.fail('获取学院或单位失败！');
+                    })
+            },
 
+            addUnit() {
+                if (this.add_unit === '') {
+                    this.$message('请输入学院或单位！');
+                    return;
+                }
+                let data = this.$qs.stringify({
+                    "name": this.add_unit,
+                });
+                this.$post("/api/v1/workplace/", data)
+                    .then((res) => {
+                        this.Refresh('unit');
+                        this.success('添加成功！');
+                    })
+                    .catch((err) => {
+                        this.Refresh('unit');
+                        this.fail('添加失败！');
+                    });
+            },
+            delUnit() {
+                if (this.unit === '') {
+                    this.$message('请选择要删除的学院或单位！');
+                    return ;
+                }
+                this.$confirm('此操作将删除选择的学院或单位, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$delete("/api/v1/workplace/" + this.unit + "/")
+                        .then((res) => {
+                            this.Refresh('unit');
+                            this.success('删除成功！');
+                        })
+                        .catch((err) => {
+                            this.Refresh('unit');
+                            this.fail('删除失败！');
+                        });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
             addProfession(str) {
                 //添加校内或者校外职业，根据传入的字符串进行区分
                 let name = (str === 'inSchool') ? this.addInSchool : this.addOutSchool;
                 let in_school = (str === 'inSchool') ? 'True' : 'False';
 
-                let qs = require('qs');
-                let instance = axios.create({
-                    headers: {'content-type': 'application/x-www-form-urlencoded'}
-                });
-                let data = qs.stringify({
+                let data = this.$qs.stringify({
                     "name": name,
                     "in_school": in_school,
                 });
-                instance.post("/api/v1/profession/", data)
+                this.$post("/api/v1/profession/", data)
                     .then((res) => {
                         this.Refresh('profession');
                         this.success('添加成功！');
@@ -276,10 +341,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    let instance = axios.create({
-                        headers: {'content-type': 'application/x-www-form-urlencoded'}
-                    });
-                    instance.delete("/api/v1/profession/" + in_school + "/")
+                    this.$delete("/api/v1/profession/" + in_school + "/")
                         .then((res) => {
                             this.Refresh('profession');
                             this.success('删除成功！');
@@ -356,24 +418,20 @@
             addAddressType(site, num) {
                 //添加一级、二级，案发地点、案件类型，根据传入的参数判断
                 let data = {};
-                let qs = require('qs');
-                let instance = axios.create({
-                    headers: {'content-type': 'application/x-www-form-urlencoded'}
-                });
                 if (num === 1) {
-                    data = qs.stringify({
+                    data = this.$qs.stringify({
                         "name": this.add,
                         "is_parent": true,
                     });
                 } else if (num === 2) {
                     let parent = (site === 'address') ? this.address1 : this.type1;
-                    data = qs.stringify({
+                    data = this.$qs.stringify({
                         "name": this.add,
                         "parent": parent,
                         "is_parent": false,
                     });
                 }
-                instance.post("/api/v1/" + site + '/', data)
+                this.$post("/api/v1/" + site + '/', data)
                     .then((res) => {
                         this.dialogVisible = false;
                         this.add = '';
@@ -411,10 +469,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    let instance = axios.create({
-                        headers: {'content-type': 'application/x-www-form-urlencoded'}
-                    });
-                    instance.delete("/api/v1/" + str + "/" + id + "/")
+                    this.$delete("/api/v1/" + str + "/" + id + "/")
                         .then((res) => {
                             this.Refresh(str);
                             this.success('删除成功！');
@@ -485,6 +540,11 @@
                     this.outSchools = [];
                     this.addOutSchool = '';
                     this.profession();
+                } else if (site === 'unit') {
+                    this.unit = '';
+                    this.units = [];
+                    this.add_unit = '';
+                    this.getUnits();
                 }
             },
             success(str) {
@@ -499,21 +559,22 @@
                     type: 'error'
                 })
             },
-            ...mapMutations(['setLabelProfession_in','setLabelProfession_out','setLabelPosition','setLabelType']),
+            ...mapMutations(['setLabelProfession_in', 'setLabelProfession_out', 'setLabelPosition', 'setLabelType']),
         },
         mounted: function () {
-            axios.defaults.headers.common['Authorization'] = "JWT "+this.token;
+            axios.defaults.headers.common['Authorization'] = "JWT " + this.token;
             this.caseType();
             this.casePosition();
             this.profession();
+            this.getUnits();
         },
-        computed:{
+        computed: {
             ...mapState({
                 token: state => state.token,
-                labelType:state=>state.labelType,
-                labelPosition:state=>state.labelPosition,
-                labelProfession_in:state=>state.labelProfession_in,
-                labelProfession_out:state=>state.labelProfession_out,
+                labelType: state => state.labelType,
+                labelPosition: state => state.labelPosition,
+                labelProfession_in: state => state.labelProfession_in,
+                labelProfession_out: state => state.labelProfession_out,
             })
         },
         watch: {
@@ -532,6 +593,12 @@
                         this.type2_s = this.type1_s[i].children;
                     }
                 }
+            },
+            msgLabel: function () {
+                this.caseType();
+                this.casePosition();
+                this.profession();
+                this.getUnits();
             }
         }
     }

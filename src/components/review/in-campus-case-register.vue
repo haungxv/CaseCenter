@@ -556,14 +556,12 @@
             </div>
             <div style="text-align: left;margin-top: 20px">
                 <el-button type="success" @click="report('case_1','case_2','case_3')">报 案</el-button>
-                <!--<el-button type="message" @click="print('case_1','case_2','case_3')">点击打印</el-button>-->
             </div>
         </div>
     </div>
 </template>
 <script>
-
-    import axios from 'axios';
+    import axios from 'axios'
     import caseDialog from '../multi/caseDialog.vue'
     import {
         mapState,
@@ -572,6 +570,7 @@
 
     export default {
         components: {caseDialog},
+        props: ['msgIn'],
         data() {
             return {
                 rules: {
@@ -756,132 +755,7 @@
                         },
                     ],
                     grades: [],
-                    work_places: [
-                        {
-                            name: "信息与通信工程学院",
-                            id: 1,
-                        },
-                        {
-                            name: "材料与能源学院",
-                            id: 2,
-                        },
-                        {
-                            name: "光电科学与工程学院",
-                            id: 3,
-                        },
-                        {
-                            name: "材料与环境学院",
-                            id: 4,
-                        },
-                        {
-                            name: "信息与软件工程学院",
-                            id: 5,
-                        },
-                        {
-                            name: "数学科学学院",
-                            id: 6,
-                        },
-                        {
-                            name: "医学院",
-                            id: 7,
-                        },
-                        {
-                            name: "经济与管理学院",
-                            id: 8,
-                        },
-                        {
-                            name: "外国语学院",
-                            id: 9,
-                        },
-                        {
-                            name: "格拉斯哥学院",
-                            id: 10,
-                        },
-                        {
-                            name: "基础与前沿研究院",
-                            id: 11,
-                        },
-                        {
-                            name: "英才实验学院",
-                            id: 12,
-                        },
-                        {
-                            name: "电子科学与工程学院",
-                            id: 13,
-                        },
-                        {
-                            name: "机械与电气工程学院",
-                            id: 14,
-                        },
-                        {
-                            name: "自动化工程学院",
-                            id: 15,
-                        },
-                        {
-                            name: "计算机科学与工程学院",
-                            id: 16,
-                        },
-                        {
-                            name: "航空航天学院",
-                            id: 17,
-                        },
-                        {
-                            name: "物理学院",
-                            id: 18,
-                        },
-                        {
-                            name: "生命科学与技术学院",
-                            id: 19,
-                        },
-                        {
-                            name: "公共管理学院",
-                            id: 20,
-                        },
-                        {
-                            name: "马克思主义学院",
-                            id: 21,
-                        },
-                        {
-                            name: "体育部",
-                            id: 22,
-                        },
-                        {
-                            name: "通信抗干扰技术国家级重点实验室",
-                            id: 23,
-                        },
-                        {
-                            name: "学校办公室",
-                            id: 24,
-                        },
-                        {
-                            name: "图书馆",
-                            id: 25,
-                        },
-                        {
-                            name: "校团委(创新创业学院)",
-                            id: 26,
-                        },
-                        {
-                            name: "校医院",
-                            id: 29,
-                        },
-                        {
-                            name: "保卫处",
-                            id: 30,
-                        },
-                        {
-                            name: "教务处",
-                            id: 31,
-                        },
-                        {
-                            name: "财务处",
-                            id: 32,
-                        },
-                        {
-                            name: "其他",
-                            id: 33,
-                        },
-                    ]
+                    work_places: [],
                 },
                 print_caseType: '',
                 print_occur_place: '',
@@ -953,10 +827,6 @@
                     case_type = (this.caseInformation.caseType.length === 1) ? this.caseInformation.caseType[0] : this.caseInformation.caseType[1];
                     occur_place = (this.caseInformation.occur_place.length === 1) ? this.caseInformation.occur_place[0] : this.caseInformation.occur_place[1];
 
-                    let qs = require('qs');
-                    let instance = axios.create({
-                        headers: {'Content-Type': 'application/json'}
-                    });
                     let data = {
                         "occur_time": this.caseInformation.caseTime,
                         "registrant": null,
@@ -975,7 +845,7 @@
                         "saw_monitoring": this.saw_monitoring,
                         "reporter": this.reporter,
                     };
-                    instance.post("/api/v1/cases/", data)
+                    this.$post("/api/v1/cases/", data)
                         .then((res) => {
                             this.success("案件录入成功！");
                             this.print();
@@ -992,7 +862,7 @@
                 let date = new Date();
                 let year = date.getFullYear();
                 let length = year - 2010;
-                let array=[];
+                let array = [];
                 for (let i = 0; i < length; i++) {
                     array.push({
                         name: year,
@@ -1000,7 +870,7 @@
                     });
                     year--;
                 }
-                this.info.grades=array;
+                this.info.grades = array;
             },
             reportClose() {
                 this.caseInformation.caseTime = '';
@@ -1188,10 +1058,7 @@
             },
             caseType() {
                 //获取案件类型
-                let instance = axios.create({
-                    headers: {'content-type': 'application/x-www-form-urlencoded'}
-                });
-                axios.get("/api/v1/casetype/")
+                this.$get("/api/v1/casetype/")
                     .then((res) => {
                         let array_1 = this.getList(res);
                         let array_2 = [];
@@ -1226,10 +1093,7 @@
             },
             casePosition() {
                 //获取案发地点
-                let instance = axios.create({
-                    headers: {'content-type': 'application/x-www-form-urlencoded'}
-                });
-                axios.get("/api/v1/address/")
+                this.$get("/api/v1/address/")
                     .then((res) => {
                         let array_1 = this.getList(res);
                         let array_2 = [];
@@ -1264,10 +1128,7 @@
             },
             profession() {
                 //获取职业或者身份
-                let instance = axios.create({
-                    headers: {'content-type': 'application/x-www-form-urlencoded'}
-                });
-                instance.get("/api/v1/profession/")
+                this.$get("/api/v1/profession/")
                     .then((res) => {
                         let length = res.data.length;
                         let array_1 = [];
@@ -1286,13 +1147,19 @@
                             }
                         }
                         this.info.professions = array_1;
-                        // this.outSchools = array_2;
-                        // this['setLabelProfession_in'](array_1);
-                        // this['setLabelProfession_out'](array_2);
                     })
                     .catch((err) => {
                         this.fail('获取职业或身份失败！');
                     });
+            },
+            getUnits() {
+                this.$get("/api/v1/workplace/")
+                    .then((res) => {
+                        this.info.work_places = res.data;
+                    })
+                    .catch((err) => {
+                        this.fail('获取学院或单位失败！');
+                    })
             },
             success(str) {
                 this.$message({
@@ -1382,6 +1249,7 @@
             this.caseType();
             this.casePosition();
             this.profession();
+            this.getUnits();
             this.getNowDate();
         }
         ,
@@ -1398,6 +1266,12 @@
             has_loss: function () {
                 this.show_loss = (this.has_loss === '0') ? false : true;
             },
+            msgIn: function () {
+                this.caseType();
+                this.casePosition();
+                this.profession();
+                this.getUnits();
+            }
         }
     }
 </script>

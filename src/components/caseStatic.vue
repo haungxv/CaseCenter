@@ -72,7 +72,7 @@
 
 <script>
     import caseDialog from './multi/caseDialog.vue'
-    import axios from 'axios';
+    import axios from 'axios'
     import {
         mapState,
         mapMutations,
@@ -97,136 +97,7 @@
                 caseType: [],//案件类型数组
                 caseTypeNumber: [],//相应案件类型对应的案件数量
                 show_chart: false,//是否以图表形式展示
-                work_places: [
-                    {
-                        name: "信息与通信工程学院",
-                        id: 1,
-                    },
-                    {
-                        name: "材料与能源学院",
-                        id: 2,
-                    },
-                    {
-                        name: "光电科学与工程学院",
-                        id: 3,
-                    },
-                    {
-                        name: "材料与环境学院",
-                        id: 4,
-                    },
-                    {
-                        name: "信息与软件工程学院",
-                        id: 5,
-                    },
-                    {
-                        name: "数学科学学院",
-                        id: 6,
-                    },
-                    {
-                        name: "医学院",
-                        id: 7,
-                    },
-                    {
-                        name: "经济与管理学院",
-                        id: 8,
-                    },
-                    {
-                        name: "外国语学院",
-                        id: 9,
-                    },
-                    {
-                        name: "格拉斯哥学院",
-                        id: 10,
-                    },
-                    {
-                        name: "基础与前沿研究院",
-                        id: 11,
-                    },
-                    {
-                        name: "英才实验学院",
-                        id: 12,
-                    },
-                    {
-                        name: "电子科学与工程学院",
-                        id: 13,
-                    },
-                    {
-                        name: "机械与电气工程学院",
-                        id: 14,
-                    },
-                    {
-                        name: "自动化工程学院",
-                        id: 15,
-                    },
-                    {
-                        name: "计算机科学与工程学院",
-                        id: 16,
-                    },
-                    {
-                        name: "航空航天学院",
-                        id: 17,
-                    },
-                    {
-                        name: "物理学院",
-                        id: 18,
-                    },
-                    {
-                        name: "生命科学与技术学院",
-                        id: 19,
-                    },
-                    {
-                        name: "公共管理学院",
-                        id: 20,
-                    },
-                    {
-                        name: "马克思主义学院",
-                        id: 21,
-                    },
-                    {
-                        name: "体育部",
-                        id: 22,
-                    },
-                    {
-                        name: "通信抗干扰技术国家级重点实验室",
-                        id: 23,
-                    },
-                    {
-                        name: "学校办公室",
-                        id: 24,
-                    },
-                    {
-                        name: "图书馆",
-                        id: 25,
-                    },
-                    {
-                        name: "校团委(创新创业学院)",
-                        id: 26,
-                    },
-                    {
-                        name: "校医院",
-                        id: 29,
-                    },
-                    {
-                        name: "保卫处",
-                        id: 30,
-                    },
-                    {
-                        name: "教务处",
-                        id: 31,
-                    },
-                    {
-                        name: "财务处",
-                        id: 32,
-                    },
-                    {
-                        name: "其他",
-                        id: 33,
-                    },
-                    {
-                        name: "全部",
-                        id: 34,
-                    },
-                ],
+                work_places: [],
 
                 dialogVisible: false,//判断弹出框是否展示
                 caseDetail: {},//弹出详情弹窗中的内容
@@ -245,14 +116,18 @@
             }
         },
         methods: {
+            getUnits() {
+                this.$get("/api/v1/workplace/")
+                    .then((res) => {
+                        this.work_places = res.data;
+                    })
+                    .catch((err) => {
+                        this.fail('获取学院或单位失败！');
+                    })
+            },
             getCases() {
                 //获取所有案件
-                let instance = axios.create({
-                    headers: {
-                        'content-type': 'application/x-www-form-urlencoded',
-                    }
-                });
-                instance.get("/api/v1/cases/")
+                this.$get("/api/v1/cases/")
                     .then((res) => {
                             this.allCases = res.data;
                             this.caseLists = res.data;
@@ -372,23 +247,23 @@
                 this.dialogVisible = false;
             },
             handleJsonTable() {
-                let length=this.caseLists.length;
+                let length = this.caseLists.length;
                 this.jsonData.push({
-                    case_id:"案件编号",
-                    name:"报案人姓名",
-                    phone:"电话",
-                    case_type:"案件类型",
-                    work_place:"学院或单位",
-                    registrant:"登记人"
+                    case_id: "案件编号",
+                    name: "报案人姓名",
+                    phone: "电话",
+                    case_type: "案件类型",
+                    work_place: "学院或单位",
+                    registrant: "登记人"
                 });
-                for(let i=0;i<length;i++){
+                for (let i = 0; i < length; i++) {
                     this.jsonData.push({
-                        case_id:this.caseLists[i].case_id,
-                        name:this.caseLists[i].reporter.name,
-                        phone:this.caseLists[i].reporter.phone,
-                        case_type:this.caseLists[i].case_type,
-                        work_place:this.caseLists[i].reporter.work_place,
-                        registrant:this.caseLists[i].registrant.name
+                        case_id: this.caseLists[i].case_id,
+                        name: this.caseLists[i].reporter.name,
+                        phone: this.caseLists[i].reporter.phone,
+                        case_type: this.caseLists[i].case_type,
+                        work_place: this.caseLists[i].reporter.work_place,
+                        registrant: this.caseLists[i].registrant.name
                     })
                 }
             },
@@ -412,7 +287,7 @@
             },
             handleTime(str) {
                 //处理时间格式
-                if(str){
+                if (str) {
                     let a = str.substring(0, 19);
                     return a.replace("T", ' ');
                 }
@@ -467,6 +342,7 @@
         },
         mounted() {
             axios.defaults.headers.common['Authorization'] = "JWT " + this.token;
+            this.getUnits();
             this.getCases();
         },
         watch: {

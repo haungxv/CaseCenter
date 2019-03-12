@@ -37,10 +37,7 @@
         methods: {
             getRecord() {
                 //获取所有账户列表
-                let instance = axios.create({
-                    headers: {'content-type': 'application/x-www-form-urlencoded'}
-                });
-                instance.get("/api/v1/logs/")
+                this.$get("/api/v1/logs/")
                     .then((res) => {
                         let array = res.data;
                         array.reverse();

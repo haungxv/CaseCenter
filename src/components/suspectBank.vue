@@ -87,10 +87,7 @@
         methods: {
             getSuspect() {
                 //获取所有账户列表
-                let instance = axios.create({
-                    headers: {'content-type': 'application/x-www-form-urlencoded'}
-                });
-                instance.get("/api/v1/cases/suspect/")
+                this.$get("/api/v1/cases/suspect/")
                     .then((res) => {
                         this.suspectLists = res.data;
                         this['setSuspect'](res.data);

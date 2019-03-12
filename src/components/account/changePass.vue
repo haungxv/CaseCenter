@@ -72,14 +72,10 @@
                 //修改密码
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        let qs = require('qs');
-                        let instance = axios.create({
-                            headers: {'content-type': 'application/x-www-form-urlencoded'}
-                        });
-                        let data = qs.stringify({
+                        let data = this.$qs.stringify({
                             "password": this.PasswordForm.pass,
                         });
-                        instance.post("/api/v1/users/reset_pwd/", data)
+                        this.$post("/api/v1/users/reset_pwd/", data)
                             .then((res) => {
                                 this.resetForm('PasswordForm');
                                 this.$message({

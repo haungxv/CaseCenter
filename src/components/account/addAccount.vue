@@ -38,7 +38,7 @@
     </div>
 </template>
 <script>
-    import axios from 'axios';
+    import axios from 'axios'
     import {
         mapState,
         mapMutations,
@@ -90,11 +90,7 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                         if (valid) {
-                            let qs = require('qs');
-                            let instance = axios.create({
-                                headers: {'content-type': 'application/x-www-form-urlencoded'}
-                            });
-                            let data = qs.stringify({
+                            let data = this.$qs.stringify({
                                 "name": this.form.name,
                                 "phone": this.form.phone,
                                 "email": this.form.email,
@@ -103,7 +99,7 @@
                                 "username": this.form.username,
                                 "password": this.form.password
                             });
-                            instance.post("/api/v1/users/", data)
+                            this.$post("/api/v1/users/", data)
                                 .then((res) => {
                                     this.resetForm('form');
                                     this.$message({

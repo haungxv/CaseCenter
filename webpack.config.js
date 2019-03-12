@@ -13,7 +13,7 @@ const config = {
     entry: path.join(__dirname, 'index.js'),
     output: {
         filename: 'bundle.[hash:8].js',
-        path: path.join(__dirname, 'caseCenter'),
+        path: path.join(__dirname, 'case'),
         publicPath: "/"
     },
     module: {
@@ -87,8 +87,8 @@ if (isDev) {
     };
     config.output = {
         filename: '[name].[chunkhash:8].js',
-        path: path.join(__dirname, 'caseCenter'),
-        publicPath: '/'
+        path: path.join(__dirname, 'case'),
+        publicPath: '/case/'
     };
     config.module.rules.push({
         test: /\.css$/,
@@ -104,14 +104,10 @@ if (isDev) {
     });
     config.plugins.push(
         new MiniCssExtractPlugin({
-            filename: "components/[name].[contenthash:8].css",
+            filename: "styles/[name].[contenthash:8].css",
             // chunkFilename: "[id].css"
         }),
     );
-    config.externals={
-        'vue':'Vue',
-        'element-ui':'ELEMENT'
-    };
     config.optimization = {
         splitChunks: {
             chunks: 'all'

@@ -26,6 +26,7 @@
 </template>
 
 <script>
+
     import axios from 'axios';
     import {
         mapState,
@@ -60,17 +61,13 @@
                 //提交修改信息
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        let qs = require('qs');
-                        let instance = axios.create({
-                            headers: {'content-type': 'application/x-www-form-urlencoded'}
-                        });
-                        let data = qs.stringify({
+                        let data = this.$qs.stringify({
                             "name": this.form.name,
                             "email": this.form.email,
                             "phone": this.form.phone,
                             "identity_card": this.form.identity_card,
                         });
-                        instance.post("/api/v1/users/change/", data)
+                        this.$post("/api/v1/users/change/", data)
                             .then((res) => {
                                 this.resetForm('form');
                                 this.$message({

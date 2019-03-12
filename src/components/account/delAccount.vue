@@ -44,10 +44,7 @@
         methods: {
             getAccount() {
                 //获取所有账户列表
-                let instance = axios.create({
-                    headers: {'content-type': 'application/x-www-form-urlencoded'}
-                });
-                instance.get("/api/v1/users/")
+                this.$get("/api/v1/users/")
                     .then((res) => {
                         this.users = res.data;
                         this['setUserList'](res.data);
@@ -63,10 +60,7 @@
 
             deleteAccount() {
                 //删除账号
-                let instance = axios.create({
-                    headers: {'content-type': 'application/x-www-form-urlencoded'}
-                });
-                instance.delete("/api/v1/users/" + this.id + "/")
+                this.$delete("/api/v1/users/" + this.id + "/")
                     .then((res) => {
                         this.delCancel();
                         this.success('删除账号成功！');

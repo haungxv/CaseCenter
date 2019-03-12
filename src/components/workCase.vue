@@ -225,7 +225,7 @@
                         let workCase = [];
                         let length = res.data.length;
                         for (let i = 0; i < length; i++) {
-                            if (res.data[i].deal_status === 1) {
+                            if (res.data[i].deal_status === 0) {
                                 workCase.push(res.data[i])
                             }
                         }
@@ -309,7 +309,7 @@
                     headers: {'content-type': 'application/x-www-form-urlencoded'}
                 });
                 let data = qs.stringify({
-                    deal_status: 2,
+                    deal_status: 1,
                     deal_result: this.result.join('/'),
                 });
                 instance.post("/api/v1/cases/" + this.row.id + "/deal/", data)
@@ -319,7 +319,7 @@
                         this.result = [];
                         this.getCases();
                         this.$message({
-                            message: "案件处理成功，案件状态更新为历史案件!",
+                            message: "案件处理成功，案件状态更新为归档案件!",
                             type: 'success'
                         })
                     })

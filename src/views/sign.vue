@@ -16,7 +16,7 @@
 </template>
 
 <script>
-    import axios from 'axios';
+
     import {
         mapState,
         mapMutations,
@@ -29,29 +29,64 @@
                 form: {
                     username: '',
                     password: '',
-                }
+                },
             }
         },
         methods: {
             login() {
-                let qs = require('qs');
-                let instance = axios.create({
-                    headers: {'content-type': 'application/x-www-form-urlencoded'}
-                });
-                let data = qs.stringify({
+                if (this.form.username === '') {
+                    this.$message('请填写用户名！');
+                    return
+                }
+                if (this.form.password === '') {
+                    this.$message('请填写密码！');
+                    return
+                }
+                let data = this.$qs.stringify({
                     "username": this.form.username,
                     "password": this.form.password,
                 });
-                instance.post("http://120.79.137.221:801/token-auth/", data)
+                this.$post("/token-auth/", data)
                     .then((res) => {
-                        if (res.status) {
-                            this.$router.push('/manager/caseReview');
-                            this['setToken'](res.data.token);
-                            this['setRole'](res.data.role);
-                        }
+                        this.$router.push('/case/manager/caseReview');
+                        this['setToken'](res.data.token);
+                        this['setRole'](res.data.role);
                     })
-                    .catch((err) => {
-                        console.log(err)
+                    .catch((error) => {
+                        // console.log(JSON.stringify(error));
+
+                        let errorObject = JSON.parse(JSON.stringify(error));
+                        console.log(errorObject);
+                        // dispatch(authError(errorObject.response.data.error));
+
+                        // console.log(2,error.response.status);
+                        // console.log(3,error.response.headers);
+                        // console.log('Error', error.message);
+                        // console.log(4,error.config);
+                        // if (error.response) {
+                        //     console.log('1');
+                        //     // The request was made and the server responded with a status code
+                        //     // that falls out of the range of 2xx
+                        //     console.log(error.response.data);
+                        //     console.log(error.response.status);
+                        //     console.log(error.response.headers);
+                        // } else if (error.request) {
+                        //     console.log('2');
+                        //     // The request was made but no response was received
+                        //     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                        //     // http.ClientRequest in node.js
+                        //     console.log(error.request);
+                        // } else {
+                        //     console.log('3');
+                        //     // Something happened in setting up the request that triggered an Error
+                        //     console.log('Error', error.message);
+                        // }
+                        // console.log(error.config);
+
+                        // this.$message({
+                        //     message: err || '账号或密码错误！',
+                        //     type: 'error'
+                        // })
                     })
             },
             ...mapMutations(['setToken', 'setRole']),
@@ -98,8 +133,25 @@
         padding: 0 15px;
         width: 80%;
     }
-    input:-ms-input-placeholder{color:#606266;}/* Internet Explorer 10+ */
-    input::-webkit-input-placeholder{color:#606266;}/* WebKit browsers */
-    input::-moz-placeholder{color:#606266;}/* Mozilla Firefox 4 to 18 */
-    input:-moz-placeholder{color:#606266;}/* Mozilla Firefox 19+ */
+
+    input:-ms-input-placeholder {
+        color: #606266;
+    }
+
+    /* Internet Explorer 10+ */
+    input::-webkit-input-placeholder {
+        color: #606266;
+    }
+
+    /* WebKit browsers */
+    input::-moz-placeholder {
+        color: #606266;
+    }
+
+    /* Mozilla Firefox 4 to 18 */
+    input:-moz-placeholder {
+        color: #606266;
+    }
+
+    /* Mozilla Firefox 19+ */
 </style>

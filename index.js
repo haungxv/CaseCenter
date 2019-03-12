@@ -1,36 +1,22 @@
-// import Vue from 'vue';
+import Vue from 'vue';
 import Vuex from 'vuex';
 import VueRouter from 'vue-router';
 import App from './src/views/app.vue';
+import axios from 'axios';
+import qs from 'qs';
+import {get, post, put, deleteDate} from './utils/http.js'
 
-// const Vue = require('vue');
-// const ElementUI = require('element-ui');
+Vue.prototype.$get = get;
+Vue.prototype.$post = post;
+Vue.prototype.$put = put;
+Vue.prototype.$delete = deleteDate;
+Vue.prototype.$qs = qs;
 
-Vue.use(ELEMENT);
-// import {Pagination,Dialog,Menu,MenuItem,Input,
-//     Radio,Select,Option,Table,TableColumn,Button,
-//     DatePicker,Form,FormItem,Tabs,TabPane,Cascader,
-//     Message,MessageBox} from 'element-ui';
-// Vue.use(Pagination);
-// Vue.use(Dialog);
-// Vue.use(Menu);
-// Vue.use(MenuItem);
-// Vue.use(Input);
-// Vue.use(Radio);
-// Vue.use(Select);
-// Vue.use(Option);
-// Vue.use(Button);
-// Vue.use(Table);
-// Vue.use(TableColumn);
-// Vue.use(DatePicker);
-// Vue.use(Form);
-// Vue.use(FormItem);
-// Vue.use(Tabs);
-// Vue.use(TabPane);
-// Vue.use(Cascader);
-// Vue.prototype.$msgbox = MessageBox;
-// Vue.prototype.$confirm = MessageBox.confirm;
-// Vue.prototype.$message = Message;
+
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+
+Vue.use(ElementUI);
 
 
 import createVuex from './store/index.js';

@@ -143,7 +143,7 @@
         },
         methods: {
             getWeeks() {
-                axios.post("/api/v1/cases/" + this.year + "/weekly/")
+                this.$post("/api/v1/cases/" + this.year + "/weekly/")
                     .then((res) => {
                         this.weeklyLists = res.data;
                         this.week = this.weeklyLists.length;

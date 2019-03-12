@@ -64,8 +64,7 @@
 </template>
 <script>
     import caseDialog from './multi/caseDialog.vue'
-
-    import axios from 'axios';
+    import axios from 'axios'
     import {
         mapState,
         mapMutations,
@@ -119,13 +118,7 @@
             },
             getCases(num) {
                 //获取所有案件
-                let instance = axios.create({
-                    headers: {
-                        'content-type': 'application/x-www-form-urlencoded',
-                        "Authorization": "JWT " + this.token,
-                    }
-                });
-                instance.get("/api/v1/cases/")
+                this.$get("/api/v1/cases/")
                     .then((res) => {
                             let caseReview_noSee = [],
                                 caseReview_yes = [],
@@ -224,15 +217,11 @@
             review_case(id, formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        let qs = require('qs');
-                        let instance = axios.create({
-                            headers: {'content-type': 'application/x-www-form-urlencoded'}
-                        });
-                        let data = qs.stringify({
+                        let data = this.$qs.stringify({
                             reason: this.review.reason,
                             check_status: this.review.yes_no,
                         });
-                        instance.post("/api/v1/cases/" + id + "/check/", data)
+                        this.$post("/api/v1/cases/" + id + "/check/", data)
                             .then((res) => {
                                 this.closeDetail();
                                 this.getCases(0);
