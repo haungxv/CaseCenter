@@ -1,10 +1,12 @@
 <template>
-    <p>首页</p>
+    <p>{{title}}</p>
 </template>
 <script>
     export default {
         data () {
-            return {}
+            return {
+                title:'你好'
+            }
         },
         methods: {},
         mounted: function () {

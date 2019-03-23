@@ -54,9 +54,9 @@
                     })
                     .catch((error) => {
                         // console.log(JSON.stringify(error));
-
-                        let errorObject = JSON.parse(JSON.stringify(error));
-                        console.log(errorObject);
+                        this.$message('无法使用提供的认证信息登陆！')
+                        // let errorObject = JSON.parse(JSON.stringify(error));
+                        // console.log(errorObject);
                         // dispatch(authError(errorObject.response.data.error));
 
                         // console.log(2,error.response.status);

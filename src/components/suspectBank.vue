@@ -42,7 +42,7 @@
             <el-table-column label="住址" align="center" prop="suspect.home_addr" width="200"></el-table-column>
             <el-table-column label="证件类型" align="center" prop="suspect.identity_document" width="110"></el-table-column>
             <el-table-column label="证件号" align="center" prop="suspect.identity_number" width="130"></el-table-column>
-            <el-table-column label="工作地点" align="center" prop="suspect.work_place"></el-table-column>
+            <el-table-column label="工作地点" align="center" prop="suspect.work_place" width="150"></el-table-column>
             <el-table-column label="民族" align="center" prop="suspect.nation"></el-table-column>
             <el-table-column label="操作" align="center" fixed="right" width="150">
                 <template slot-scope="scope">

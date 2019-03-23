@@ -1,6 +1,6 @@
 <template>
     <div>
-        <!--案件详细信息-->
+        <!--案件详细信息--打印的部分-->
         <div class="print">
             <div style="text-align: left">
                 报案类型
@@ -530,7 +530,7 @@
                         <el-form-item label="数量">
                             <el-input v-model.number="loss.sum"></el-input>
                         </el-form-item>
-                        <el-form-item label="购买时间" prop="bought_time">
+                        <el-form-item label="购买时间">
                             <el-date-picker
                                     v-model="loss.bought_time"
                                     type="date"
@@ -599,9 +599,6 @@
                     lossInfo: {
                         name: [
                             {required: true, message: '姓名不能为空', trigger: 'blur'}
-                        ],
-                        bought_time: [
-                            {required: true, message: '购买时间不能为空', trigger: 'blur'}
                         ],
                     }
                 },
@@ -703,7 +700,7 @@
                     color: '',
                     other_feature: '',
                     sum: 1,
-                    bought_time: '',
+                    bought_time: null,
                     price: '',
                 },
                 called_police: false,//是否通知公安机关等部门
@@ -817,11 +814,11 @@
                             this.$message('损失物品名称不能为空！');
                             return;
                         }
-                        if (this.loss.bought_time === '' || this.loss.bought_time === null) {
-                            this.$message('损失物品购买时间不能为空！');
-                            return;
+                        if (this.loss.bought_time === ''||this.loss.bought_time === null) {
+                            this.loss.bought_time = null;
+                        }else{
+                            this.loss.bought_time = this.changeTime(this.loss.bought_time);
                         }
-                        this.loss.bought_time = this.changeTime(this.loss.bought_time);
                     }
                     let case_type = '', occur_place = '';
                     case_type = (this.caseInformation.caseType.length === 1) ? this.caseInformation.caseType[0] : this.caseInformation.caseType[1];
@@ -956,7 +953,7 @@
                     color: '',
                     other_feature: '',
                     sum: 1,
-                    bought_time: '',
+                    bought_time: null,
                     price: '',
                 };
 
@@ -1015,6 +1012,8 @@
                     let month = time.getMonth() + 1;
                     let day = time.getDate();
                     return year + "-" + this.formTime(month) + "-" + this.formTime(day);
+                } else {
+                    return time;
                 }
             },
             formTime(str) {
